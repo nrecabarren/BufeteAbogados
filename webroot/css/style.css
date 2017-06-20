@@ -8,3 +8,49 @@ and open the template in the editor.
     Author     : Nicolas Recabarren
 */
 
+h2{
+    margin: 0;
+    padding-top: 15px;
+}
+body{
+    width: 100%;
+    margin: 0;
+}
+body header{
+    width: 100%;
+}
+body header .enterprise_name{
+    height: 60px;
+    text-align: center;
+    font-weight: bold;
+}
+body header .main_menu{
+    position: fixed;
+    border-bottom: 2px solid #3daae3;
+    background-color: #404040;
+    text-align: center;
+    color: #FFF;
+    height: 54px;
+    width: 100%;
+}
+body header .main_menu ul{
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin: 0;
+    height: 100%;
+}
+body header .main_menu ul > li{
+    display: inline-block;
+    height: auto;
+}
+body header .main_menu ul > li > a{
+    text-decoration: none;
+    color: #FFF;
+    padding: 18px 20px;
+    display: block;
+}
+body header .main_menu ul > li > a:hover,
+body header .main_menu ul > li > a.active{
+    background-color: #3daae3;
+}
