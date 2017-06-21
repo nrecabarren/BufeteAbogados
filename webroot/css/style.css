@@ -54,3 +54,6 @@ body header .main_menu ul > li > a:hover,
 body header .main_menu ul > li > a.active{
     background-color: #3daae3;
 }
+body section.main_content{
+    margin-top: 55px;
+}

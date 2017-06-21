@@ -7,10 +7,51 @@ class Usuario extends AppController{
     
     var $modelo;
     
-    public function __construct(){
+    public function __construct($method){
         $this->modelo = new UsuarioModel();
-        $this->debug($this->modelo);
+        $this->modelo->setPrimaryKey("id");
+        
+        $this->$method();
+    }
+    
+    public function login(){
+        session_start();
+        $_SESSION["var_consumibles"] = array();
+        $_SESSION["var_consumibles"]["msg_error"] = "";
+        $_SESSION["var_consumibles"]["msg_exito"] = "";
+        
+        if(!empty($_POST)){
+            
+            $usuario = $this->modelo->buscar('first',array(
+                "conditions" => array(
+                    "rut" => $_POST["rut_usuario"],
+                    "contrasena" => $_POST["contrasena_usuario"]
+                )
+            ));
+            
+            if(!empty($usuario)){
+                
+                $_SESSION["user_logueado"] = $usuario["Usuario"];
+                $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
+                
+                if($usuario["Usuario"]["perfil_id"] == 1){
+                    $this->redireccionar(VIEWS_PATH."Administrador/listado_clientes.php");
+                }
+            }
+            
+            $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
+            $this->redireccionar(VIEWS_PATH."login.php");
+        }
+        
+        $_SESSION["var_consumibles"]["msg_error"] = "Error al recibir los datos.";
+    }
+    
+    public function logout(){
+        unset($_SESSION["user_logueado"]);
+        $_SESSION["var_consumibles"]["msg_exito"] = "Haz cerrado sesión con éxito.";
+        
+        $this->redireccionar(VIEWS_PATH."login.php");
     }
 }
 
-$oUsuario = new Usuario();
+$oUsuario = new Usuario($_GET["action"]);

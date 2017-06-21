@@ -1,5 +1,4 @@
 <?php
-
 $main_menu = array(
     "default" => array(
         0 => array(
@@ -28,7 +27,7 @@ $main_menu = array(
         ),
         3 => array(
             "name" => "Salir",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )
     ),
     

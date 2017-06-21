@@ -22,7 +22,25 @@
             </div>
         </header>
         <section class="main_content">
-            
+            <form action="<?=CONTROLLER_PATH."Usuario.php?action=login";?>" method="POST">
+                <?php if(!empty($_SESSION["var_consumibles"]["msg_error"])){ ?>
+                    <div class="msg msg-error">
+                        <?php
+                            echo $_SESSION["var_consumibles"]["msg_error"];
+                            $_SESSION["var_consumibles"]["msg_error"] = "";
+                        ?>
+                    </div>
+                <?php } ?>
+                <fieldset>
+                    <label>RUT:</label>
+                    <input type="text" name="rut_usuario" maxlength="8">
+                </fieldset>
+                <fieldset>
+                    <label>Contraseña:</label>
+                    <input type="password" name="contrasena_usuario">
+                </fieldset>
+                <input type="submit" value="Enviar">
+            </form>
         </section>
     </body>
 </html>

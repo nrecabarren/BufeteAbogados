@@ -4,6 +4,7 @@ include "Conexion.php";
 class AppModel{
     
     var $oConexion;
+    var $_name;
     var $_tableName; # Nombre de la tabla que usará el modelo.
     var $_primaryKey = "id"; # Nombre de la columna que es primary key en la tabla que usará el modelo.
     var $_fields; # Columnas de la tabla que usará el modelo.
@@ -17,6 +18,9 @@ class AppModel{
         $this->setTableColumns();
     }
     
+    public function setName($newModelName){
+        $this->_name = $newModelName;
+    }
     public function setPrimaryKey($newPrimaryKeyField){
         $this->_primaryKey = $newPrimaryKeyField;
     }
@@ -80,7 +84,7 @@ class AppModel{
         }
         
         # Query para insertar registro.
-        $query = 'INSERT INTO '.$this->_tableName.'('.$fields.') VALUES ('.$values.');';
+        $query = 'INSERT INTO '.$this->oConexion->dbName.".".$this->_tableName.'('.$fields.') VALUES ('.$values.');';
         
         return mysql_query($query);
     }
@@ -129,8 +133,11 @@ class AppModel{
                     $condiciones = $params['conditions'];
                 } else {
                     
+                    $aux = $params['conditions'];
+                    end($aux);
+                    $ultimoKey = key($aux);
                     foreach($params['conditions'] as $field => $valorABuscar){
-                        if(end($params['conditions']) == $valorABuscar){
+                        if($ultimoKey == $field){
                             $condiciones .= $field." = '".$valorABuscar."'";
                         } else {
                             $condiciones .= $field." = '".$valorABuscar."' AND ";
@@ -159,7 +166,7 @@ class AppModel{
         }
         
         # Concatenamos el nombre de la tabla.
-        $query .= ' FROM '.$this->_tableName;
+        $query .= ' FROM '.$this->oConexion->dbName.".".$this->_tableName;
         
         # Concatenamos las condiciones
         if(!empty($condiciones)){

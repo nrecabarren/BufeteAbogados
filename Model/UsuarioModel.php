@@ -13,11 +13,12 @@ class UsuarioModel extends AppModel{
         $this->nombreCompleto = $nombreCompleto;
         
         $this->setTableName("usuario");
+        $this->setName("Usuario");
         
         parent::__construct();
     }
     
-    private function hashPassword($password){
+    public function hashPassword($password){
         $this->password = $password;
     }
 }

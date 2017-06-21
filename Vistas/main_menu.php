@@ -7,7 +7,7 @@
     if(!empty($_SESSION["user_logueado"])){
         
         $perfil_id = $_SESSION["user_logueado"]["perfil_id"];
-        $menu = $main_menu["administrador"][$perfil_id];
+        $menu = $main_menu[$perfil_id];
     }
     
     foreach($menu as $key => $datosMenu):
