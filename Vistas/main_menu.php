@@ -2,7 +2,6 @@
 <ul>
     <?php
     session_start();
-    
     $menu = $main_menu["default"];
     if(!empty($_SESSION["user_logueado"])){
         

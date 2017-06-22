@@ -1,7 +1,7 @@
 <?php
 include "AppController.php";
 include APP_MODELS."UsuarioModel.php";
-
+session_start();
 
 class Usuario extends AppController{
     
@@ -15,7 +15,7 @@ class Usuario extends AppController{
     }
     
     public function login(){
-        session_start();
+        
         $_SESSION["var_consumibles"] = array();
         $_SESSION["var_consumibles"]["msg_error"] = "";
         $_SESSION["var_consumibles"]["msg_exito"] = "";
@@ -47,7 +47,7 @@ class Usuario extends AppController{
     }
     
     public function logout(){
-        unset($_SESSION["user_logueado"]);
+        $_SESSION["user_logueado"] = array();
         $_SESSION["var_consumibles"]["msg_exito"] = "Haz cerrado sesión con éxito.";
         
         $this->redireccionar(VIEWS_PATH."login.php");

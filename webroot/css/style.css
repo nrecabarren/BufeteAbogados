@@ -15,9 +15,13 @@ h2{
 body{
     width: 100%;
     margin: 0;
+    height: 1200px;
 }
 body header{
     width: 100%;
+    position: fixed;
+    top: 0;
+    background-color: #FFF;
 }
 body header .enterprise_name{
     height: 60px;
@@ -25,7 +29,6 @@ body header .enterprise_name{
     font-weight: bold;
 }
 body header .main_menu{
-    position: fixed;
     border-bottom: 2px solid #3daae3;
     background-color: #404040;
     text-align: center;
@@ -55,5 +58,19 @@ body header .main_menu ul > li > a.active{
     background-color: #3daae3;
 }
 body section.main_content{
-    margin-top: 55px;
+    margin-top: 120px;
+}
+.msg{
+    padding: 8px;
+    text-align: center;
+}
+.msg.msg-error{
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+.msg.msg-success{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
 }
