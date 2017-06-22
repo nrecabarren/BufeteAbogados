@@ -1,5 +1,6 @@
 <?php
     include "../../Config/constants.php";
+	echo "Hola";
     
 ?>
 
