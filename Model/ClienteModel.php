@@ -1,7 +1,7 @@
 <?php
-include "UsuarioModel.php";
+include "AppModel.php";
 
-class ClienteModel extends Usuario{
+class ClienteModel extends AppModel{
     
     var $fechaIncorporacion;
     var $direccion;
@@ -10,7 +10,8 @@ class ClienteModel extends Usuario{
     var $usuarioId;
     
     public function __construct(
-        $rut, $password, $nombreCompleto, $fechaIncorporacion, $direccion, $telefono, $tipoPersonaId, $usuarioId){
+        $rut = "", $password = "", $nombreCompleto = "", $fechaIncorporacion = "", $direccion = "",
+        $telefono = "", $tipoPersonaId = "", $usuarioId = ""){
         
         $this->fechaIncorporacion = $fechaIncorporacion;
         $this->direccion = $direccion;
@@ -19,6 +20,21 @@ class ClienteModel extends Usuario{
         $this->usuarioId = $usuarioId;
         
         $this->setTableName("cliente");
+        $this->setName("Cliente");
+        
+        $this->setRelationShips(array(
+            "Usuario" => array(
+                "type" => "belongsTo",
+                "className" => "UsuarioModel",
+                "foreignKey" => "usuario_id"
+            ),
+            "TipoPersona" => array(
+                "type" => "belongsTo",
+                "className" => "TipoPersonaModel",
+                "foreignKey" => "tipo_persona_id"
+            )
+        ));
+        
         parent::__construct($rut,$password,$nombreCompleto);
     }
 }

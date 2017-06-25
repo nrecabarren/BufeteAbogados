@@ -3,11 +3,11 @@ $main_menu = array(
     "default" => array(
         0 => array(
             "name" => "Ingresar",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=login"
         ),
         1 => array(
             "name" => "Registro",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=registro"
         )
     ),
     
@@ -47,7 +47,7 @@ $main_menu = array(
         ),
         3 => array(
             "name" => "Salir",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )
     ),
     
@@ -67,7 +67,7 @@ $main_menu = array(
         ),
         3 => array(
             "name" => "Salir",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )
     ),
     
@@ -79,7 +79,7 @@ $main_menu = array(
         ),
         1 => array(
             "name" => "Salir",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )
     )
 );
