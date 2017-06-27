@@ -23,7 +23,7 @@ class Usuario extends AppController{
         if(!empty($_POST)){
             
             $usuario = $this->modelo->buscar('first',array(
-                "conditions" => array(
+                    "conditions" => array(
                     "rut" => $_POST["rut_usuario"],
                     "contrasena" => $_POST["contrasena_usuario"]
                 )
