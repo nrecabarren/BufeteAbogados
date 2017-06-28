@@ -77,18 +77,23 @@ class Usuario extends AppController{
     
     public function adminAgregarUsuario(){
         if(!empty($_POST)){
-            $save = array(
-                "rut" => $_POST["Usuario"]["rut"],
-                "contrasena" => $_POST["Usuario"]["contrasena"],
-                "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
-                "perfil_id" => $_POST["Usuario"]["perfil_id"]
-            );
             
-            if($this->modelo->insertaRegistro($save)){
-                $_SESSION["var_consumibles"]["msg_exito"] = "Usuario guardado correctamente.";
-                $this->redireccionar("Usuario.php?action=adminListadoUsuarios");
+            if( !$this->modelo->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
+                $save = array(
+                    "rut" => $_POST["Usuario"]["rut"],
+                    "contrasena" => $_POST["Usuario"]["contrasena"],
+                    "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
+                    "perfil_id" => $_POST["Usuario"]["perfil_id"]
+                );
+                
+                if($this->modelo->insertaRegistro($save)){
+                    $_SESSION["var_consumibles"]["msg_exito"] = "Usuario guardado correctamente.";
+                    $this->redireccionar("Usuario.php?action=adminListadoUsuarios");
+                }
+                $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el usuario.";
+            } else {
+                $_SESSION["var_consumibles"]["msg_error"] = "Rut ya registrado en el sistema.";
             }
-            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el usuario.";
         }
         
         $PerfilModel = $this->importModel("PerfilModel");

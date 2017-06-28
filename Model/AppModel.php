@@ -83,10 +83,7 @@ class AppModel{
         
         # Query para insertar registro.
         $query = 'INSERT INTO '.$this->oConexion->dbName.".".$this->_tableName.'('.$fields.') VALUES ('.$values.');';
-        /*if($this->_name =="Cliente" ){
-            $this->debug($query);
-        }*/
-        //
+        
         return mysql_query($query);
     }
     
@@ -171,7 +168,7 @@ class AppModel{
         $query = 'SELECT ';
         # Si busca un count.
         if($tipoBusqueda == 'count'){
-            $query .= 'COUNT(*)';
+            $query .= 'COUNT(id)';
             
         } elseif(!empty($campos)){
             $query .= $campos;
@@ -290,6 +287,8 @@ class AppModel{
                 $arrayToReturn[$this->_name][] = $fila;
             } elseif($tipoBusqueda == 'list'){
                 $arrayToReturn[reset($fila)] = end($fila);
+            } elseif($tipoBusqueda == 'count'){
+                $arrayToReturn = end($fila);
             }
         }
         mysql_free_result($resultados);

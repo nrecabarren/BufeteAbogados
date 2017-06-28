@@ -30,21 +30,26 @@ class Clientes extends AppController{
     public function adminAgregarCliente(){
         if(!empty($_POST)){
             
-            $save = $_POST["Usuario"];
-            $save["perfil_id"] = 2;
             $UsuarioModel = $this->importModel("UsuarioModel");
             $UsuarioModel->setPrimaryKey("id");
-            if($UsuarioModel->insertaRegistro($save)){
+            if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
+                $save = $_POST["Usuario"];
+                $save["perfil_id"] = 2;
                 
-                $save = $_POST["Cliente"];
-                $save["usuario_id"] = mysql_insert_id();
-                $save["fecha_incorporacion"] = date("Y-m-d");
-                $this->modelo->insertaRegistro($save);
-                
-                $_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
-                $this->redireccionar("Clientes.php?action=adminListadoClientes");
+                if($UsuarioModel->insertaRegistro($save)){
+                    
+                    $save = $_POST["Cliente"];
+                    $save["usuario_id"] = mysql_insert_id();
+                    $save["fecha_incorporacion"] = date("Y-m-d");
+                    $this->modelo->insertaRegistro($save);
+                    
+                    $_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
+                    $this->redireccionar("Clientes.php?action=adminListadoClientes");
+                }
+                $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente.";
+            } else {
+                $_SESSION["var_consumibles"]["msg_error"] = "Rut ya registrado en el sistema.";
             }
-            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente.";
         }
         
         $TipoPersonaModel = $this->importModel("TipoPersonaModel");

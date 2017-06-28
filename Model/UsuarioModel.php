@@ -29,4 +29,15 @@ class UsuarioModel extends AppModel{
     public function hashPassword($password){
         $this->password = $password;
     }
+    
+    public function validaUsuarioExistente($rut){
+        
+        $existe = $this->buscar('count',array(
+            'conditions' => array(
+                'rut' => $rut
+            )
+        ));
+        
+        return $existe;
+    }
 }
