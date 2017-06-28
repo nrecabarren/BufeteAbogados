@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "AppController.php";
 include APP_MODELS."UsuarioModel.php";
-session_start();
 
 class Usuario extends AppController{
     
@@ -15,11 +15,6 @@ class Usuario extends AppController{
     }
     
     public function login(){
-        
-        $_SESSION["var_consumibles"] = array();
-        $_SESSION["var_consumibles"]["msg_error"] = "";
-        $_SESSION["var_consumibles"]["msg_exito"] = "";
-        
         if(!empty($_POST)){
             
             $usuario = $this->modelo->buscar('first',array(
@@ -33,24 +28,21 @@ class Usuario extends AppController{
                 
                 $_SESSION["user_logueado"] = $usuario["Usuario"];
                 $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
-                
                 if($usuario["Usuario"]["perfil_id"] == 1){
-                    $this->redireccionar(VIEWS_PATH."Administrador/listado_clientes.php");
+                    $this->redireccionar("Clientes.php?action=adminListadoClientes");
                 }
             }
             
             $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
-            $this->redireccionar(VIEWS_PATH."login.php");
         }
-        
-        $_SESSION["var_consumibles"]["msg_error"] = "Error al recibir los datos.";
+        $this->render("login.php");
     }
     
     public function logout(){
         $_SESSION["user_logueado"] = array();
         $_SESSION["var_consumibles"]["msg_exito"] = "Haz cerrado sesión con éxito.";
         
-        $this->redireccionar(VIEWS_PATH."login.php");
+        $this->redireccionar("Usuario.php?action=login");
     }
 }
 

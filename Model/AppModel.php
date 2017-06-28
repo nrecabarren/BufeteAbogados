@@ -1,6 +1,6 @@
 <?php
-include "Conexion.php";
-
+include_once "Conexion.php";
+if(!class_exists("AppModel")):
 class AppModel{
     
     var $oConexion;
@@ -8,6 +8,7 @@ class AppModel{
     var $_tableName; # Nombre de la tabla que usará el modelo.
     var $_primaryKey = "id"; # Nombre de la columna que es primary key en la tabla que usará el modelo.
     var $_fields; # Columnas de la tabla que usará el modelo.
+    var $_relationShips;
     var $id;
     
     public function __construct(){
@@ -29,6 +30,9 @@ class AppModel{
     }
     public function setTableName($tableName){
         $this->_tableName = $tableName;
+    }
+    public function setRelationShips($relations = array()){
+        $this->_relationShips = $relations;
     }
     
     /**
@@ -69,39 +73,45 @@ class AppModel{
         if($cantCampos == 0)
             die('No se han encontrado campos para la tabla '.$this->_tableName);
         
-        $fields = $values = '';
-        foreach($this->_fields as $key => $fieldName){
-            if($fieldName == $this->_primaryKey){
-                continue;
-            }
-            
-            # Si no está en el último campo le agregamos una coma para que quede
-            # en el estilo de campo1,campo2,campo3
-            if($key < ($cantCampos-1) ){
-                $fields .= $fieldName.',';
-                $values .= "'".$datos[$fieldName]."',";
-            } else {
-                $fields .= $fieldName;
-                $values .= "'".$datos[$fieldName]."'";
-            }
+        $fields = $this->_fields;
+        # Quitamos el campo que es primary key o ID.
+        unset($fields[ array_search($this->_primaryKey,$fields) ]);
+        
+        $values = "";
+        foreach($fields as $fieldname){
+            $values .= "'".$datos[$fieldname]."',";
         }
+        $fields = implode(',',$fields);
+        $values = substr($values, 0, strlen($values)-1 );
         
         # Query para insertar registro.
         $query = 'INSERT INTO '.$this->oConexion->dbName.".".$this->_tableName.'('.$fields.') VALUES ('.$values.');';
-        
+        /*if($this->_name =="Cliente" ){
+            $this->debug($query);
+        }*/
+        //
         return mysql_query($query);
     }
     
-    public function buscarPorId($id = null){
-        if($id){
-            $this->setId($id);
+    public function editar($datos = array()){
+        $fields = array();
+        foreach($datos as $field => $value){
+            $fields[] = $field."='".$value."'";
         }
         
-        return $this->buscar('first',array(
-            'conditions' => array(
-                $this->_primaryKey => $this->id
-            )
-        ));
+        $fields = implode(',',$fields);
+        $query = "UPDATE ".$this->oConexion->dbName.".".$this->_tableName." SET ".$fields." WHERE id = ".$this->id.";";
+        return mysql_query($query);
+    }
+    
+    public function buscarPorId($id = null,$params = array()){
+        if($id){
+            $this->id = $id;
+        }
+        
+        $params["conditions"][$this->_primaryKey] = $this->id;
+        
+        return $this->buscar('first',$params);
     }
     
     /**
@@ -194,7 +204,7 @@ class AppModel{
         
         $arrayResultados = $this->convertirResultadosArray($resultados,$tipoBusqueda);
         
-        /*if(isset($params) && isset($params['contain']) && !empty($params['contain'])){
+        if(isset($params) && isset($params['contain']) && !empty($params['contain'])){
             
             $arrayResultadosCopia = $arrayResultados;
             # si no es array(es string), lo convertimos a array para seguir con el proceso normalmente.
@@ -212,26 +222,45 @@ class AppModel{
                     
                     # importamos el archivo con la clase.
                     include_once( $atributosRelacion['className'].'.php' );
-                    $modelo = new $atributosRelacion['className']( $atributosRelacion['table'] );
+                    $modelo = new $atributosRelacion['className']();
+                    $modelo->setName($atributosRelacion['className']);
                     
                     if($atributosRelacion['type'] == 'belongsTo'){
                         
-                        $consulta = $modelo->buscar('first',array(
-                            'conditions' => array(
-                                'id' => $arrayResultadosCopia[$nombreModeloResultados][$atributosRelacion['foreignKey']]
-                            )
-                        ));
-                        
-                        if(empty($consulta)){
-                            $arrayResultadosCopia[$nombreModeloRelacion] = $consulta;
+                        if(isset($campos[0])){
+                            foreach($campos as $key => $camposRegistro):
+                                $consulta = $modelo->buscar('first',array(
+                                    'conditions' => array(
+                                        'id' => $arrayResultadosCopia[$nombreModeloResultados][$key][$atributosRelacion['foreignKey']]
+                                    )
+                                ));
+                                
+                                if(empty($consulta)){
+                                    $arrayResultadosCopia[$nombreModeloResultados][$key][$nombreModeloRelacion] = $consulta;
+                                } else {
+                                    $arrayResultadosCopia[$nombreModeloResultados][$key][$nombreModeloRelacion] = $consulta[$modelo->_name];
+                                }
+                            endforeach;
+                                
                         } else {
-                            $arrayResultadosCopia[$nombreModeloRelacion] = $consulta[$nombreModeloRelacion];
+                            $consulta = $modelo->buscar('first',array(
+                                'conditions' => array(
+                                    'id' => $arrayResultadosCopia[$nombreModeloResultados][$atributosRelacion['foreignKey']]
+                                )
+                            ));
+                            
+                            if(empty($consulta)){
+                                $arrayResultadosCopia[$nombreModeloRelacion] = $consulta;
+                            } else {
+                                $arrayResultadosCopia[$this->_name][$nombreModeloRelacion] = $consulta[$modelo->_name];
+                            }
                         }
+                        
                     }
                 }
             }
             $arrayResultados = $arrayResultadosCopia;
-        }*/
+        }
         
         
         return $arrayResultados;
@@ -273,3 +302,4 @@ class AppModel{
         exit();
     }
 }
+endif;
