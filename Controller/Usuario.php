@@ -35,6 +35,23 @@ class Usuario extends AppController{
             
             $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
         }
+        if(!empty($_SESSION["user_logueado"])){
+            switch($_SESSION["user_logueado"]["perfil_id"]):
+                case "1": # Administrador
+                    $this->redireccionar("Clientes.php?action=adminListadoClientes");
+                    break;
+                case "2": # Cliente
+                    
+                    break;
+                case "3": # Gerente
+                    
+                    break;
+                case "4": # Secretaria
+                    
+                    break;
+            endswitch;
+        }
+        
         $this->render("login.php");
     }
     
@@ -43,6 +60,78 @@ class Usuario extends AppController{
         $_SESSION["var_consumibles"]["msg_exito"] = "Haz cerrado sesión con éxito.";
         
         $this->redireccionar("Usuario.php?action=login");
+    }
+    
+    public function adminListadoUsuarios(){
+        $usuarios = $this->modelo->buscar('all',array(
+            'conditions' => array(
+                'perfil_id' => array(1,3,4)
+            ),
+            'contain' => 'Perfil'
+        ));
+        
+        $this->render("Administrador/admin_listado_usuarios.php",array(
+            "usuarios" => $usuarios
+        ));
+    }
+    
+    public function adminAgregarUsuario(){
+        if(!empty($_POST)){
+            $save = array(
+                "rut" => $_POST["Usuario"]["rut"],
+                "contrasena" => $_POST["Usuario"]["contrasena"],
+                "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
+                "perfil_id" => $_POST["Usuario"]["perfil_id"]
+            );
+            
+            if($this->modelo->insertaRegistro($save)){
+                $_SESSION["var_consumibles"]["msg_exito"] = "Usuario guardado correctamente.";
+                $this->redireccionar("Usuario.php?action=adminListadoUsuarios");
+            }
+            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el usuario.";
+        }
+        
+        $PerfilModel = $this->importModel("PerfilModel");
+        $perfiles = $PerfilModel->buscar("all");
+        $this->render("Administrador/admin_agregar_usuario.php",array(
+            "perfiles" => $perfiles["Perfil"]
+        ));
+    }
+    
+    public function adminEditarUsuario(){
+        $this->modelo->id = $_GET["id"];
+        
+        if(!empty($_POST)){
+            $save = array(
+                "rut" => $_POST["Usuario"]["rut"],
+                "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
+                "perfil_id" => $_POST["Usuario"]["perfil_id"]
+            );
+            
+            if(!empty($_POST["Usuario"]["contrasena"])){
+                $save["contrasena"] = $_POST["Usuario"]["contrasena"];
+            }
+            
+            if($this->modelo->editar($save)){
+                $_SESSION["var_consumibles"]["msg_exito"] = "Usuario guardado correctamente.";
+                $this->redireccionar("Usuario.php?action=adminListadoUsuarios");
+            }
+            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el usuario.";
+        }
+        
+        $conditions["id"] = $this->modelo->id;
+        $usuario = $this->modelo->buscar("first",array(
+            "conditions" => $conditions,
+            "contain" => "Perfil"
+        ));
+        
+        $PerfilModel = $this->importModel("PerfilModel");
+        $perfiles = $PerfilModel->buscar("all");
+        $this->render("Administrador/admin_editar_usuario.php",array(
+            "id" => $this->modelo->id,
+            "perfiles" => $perfiles["Perfil"],
+            "usuario" => $usuario
+        ));
     }
 }
 

@@ -15,6 +15,14 @@ class UsuarioModel extends AppModel{
         $this->setTableName("usuario");
         $this->setName("Usuario");
         
+        $this->setRelationShips(array(
+            "Perfil" => array(
+                "type" => "belongsTo",
+                "className" => "PerfilModel",
+                "foreignKey" => "perfil_id"
+            )
+        ));
+        
         parent::__construct();
     }
     

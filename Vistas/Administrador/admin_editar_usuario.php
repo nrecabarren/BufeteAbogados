@@ -1,16 +1,15 @@
 <?php
-    $currentMenu = "Clientes";
+    $currentMenu = "Usuarios";
     include APP_VIEWS."header.php";
 ?>
 <section class="main_content col-md-offset-1 col-md-10">
     <?php include APP_VIEWS."mensajes.php";?>
-    <form action="Clientes.php?action=adminEditCliente&id=<?=$id;?>" id="" method="POST" class="col-md-offset-3 col-md-6">
-        <input type="hidden" name="Cliente[id]" value="<?=$id;?>">
-        <input type="hidden" name="Cliente[usuario_id]" value="<?=$cliente["Cliente"]["usuario_id"];?>">
+    <form action="Usuario.php?action=adminEditarUsuario&id=<?=$id;?>" id="" method="POST" class="col-md-offset-3 col-md-6">
+        <input type="hidden" name="Usuario[id]" value="<?=$id;?>">
         <fieldset class="form-group row">
-            <label class="control-label col-md-3 col-md-offset-1">RUT:</label>
+            <label class="control-label col-md-3 col-md-offset-1">RUT :</label>
             <div class="col-md-4">
-                <input type="text" name="Usuario[rut]" value="<?=$cliente["Cliente"]["Usuario"]["rut"];?>" class="form-control number" maxlength="10">
+                <input type="text" name="Usuario[rut]" class="form-control number" maxlength="10" value="<?=$usuario['Usuario']['rut'];?>">
             </div>
             <div class="col-md-2">
                 <input type="text" class="form-control" disabled="disabled" name="Usuario[dv]">
@@ -25,46 +24,34 @@
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">Nombre Completo:</label>
             <div class="col-md-6">
-                <input type="text" name="Usuario[nombre_completo]" value="<?=$cliente["Cliente"]["Usuario"]["nombre_completo"];?>" class="form-control">
+                <input type="text" name="Usuario[nombre_completo]" class="form-control" value="<?=$usuario['Usuario']['nombre_completo'];?>">
             </div>
         </fieldset>
         <fieldset class="form-group row">
-            <label class="control-label col-md-3 col-md-offset-1">Dirección:</label>
+            <label class="control-label col-md-3 col-md-offset-1">Perfil:</label>
             <div class="col-md-6">
-                <input type="text" name="Cliente[direccion]" value="<?=$cliente["Cliente"]["direccion"];?>" class="form-control">
-            </div>
-        </fieldset>
-        <fieldset class="form-group row">
-            <label class="control-label col-md-3 col-md-offset-1">Teléfono:</label>
-            <div class="col-md-6">
-                <input type="text" name="Cliente[telefono]" value="<?=$cliente["Cliente"]["telefono"];?>" class="form-control">
-            </div>
-        </fieldset>
-        <fieldset class="form-group row">
-            <label class="control-label col-md-3 col-md-offset-1">Tipo Persona:</label>
-            <div class="col-md-6">
-                <select name="Cliente[tipo_persona_id]" class="form-control">
+                <select name="Usuario[perfil_id]" class="form-control">
                     <option value="">Seleccione</option>
-                    <?php
-                        foreach($tiposPersonas as $key => $dato):
-                            $selected = ($dato["id"] == $cliente["Cliente"]["tipo_persona_id"]) ? 'selected="selected"' : '';
-                            echo '<option value="'.$dato["id"].'" '.$selected.'>';
-                            echo utf8_encode($dato["descripcion"]);
-                            echo '</option>';
+                    <?php foreach($perfiles as $key => $dato):
+                        if($dato['id'] == 2){ continue; } ?>
                         
-                        endforeach;
-                    ?>
+                        <option value="<?=$dato["id"];?>" <?=$dato['id'] == $usuario['Usuario']['perfil_id'] ? 'selected="selected"' : '';?>>
+                            <?=utf8_encode($dato["descripcion"]);?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </fieldset>
         <div class="row">
-            <a class="btn btn-default col-md-offset-2" href="<?=CONTROLLER_PATH.'Clientes.php?action=adminListadoClientes';?>">Volver</a>
+            <a class="btn btn-default col-md-offset-2" href="<?=CONTROLLER_PATH.'Usuario.php?action=adminListadoUsuarios';?>">Volver</a>
             <button type="submit" class="btn btn-success col-md-offset-2">Guardar</button>
         </div>
     </form>
 </section>
 <script type="text/javascript">
     $(document).ready(function(){
+        $('input[name="Usuario[dv]"]').val( getDV( $('.number').val().replace(/\./g,'') ) );
+        
         $('.number').maskMoney({
             thousands: '.',
             precision: 0,

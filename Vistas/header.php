@@ -16,6 +16,7 @@
         <script src="http://localhost/BufeteAbogados/webroot/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="http://localhost/BufeteAbogados/webroot/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
         <script src="http://localhost/BufeteAbogados/webroot/js/datatables.min.js" type="text/javascript"></script>
+        <script src="http://localhost/BufeteAbogados/webroot/js/jquery.maskMoney.min.js" type="text/javascript"></script>
         <script src="http://localhost/BufeteAbogados/webroot/js/funciones.js" type="text/javascript"></script>
     </head>
     <body>

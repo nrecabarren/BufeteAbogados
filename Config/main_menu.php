@@ -15,7 +15,7 @@ $main_menu = array(
     1 => array(
         0 => array(
             "name" => "Clientes",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Clientes.php?action=adminListadoClientes"
         ),
         1 => array(
             "name" => "Abogados",
@@ -23,7 +23,7 @@ $main_menu = array(
         ),
         2 => array(
             "name" => "Usuarios",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Usuario.php?action=adminListadoUsuarios"
         ),
         3 => array(
             "name" => "Salir",
@@ -51,7 +51,7 @@ $main_menu = array(
         )
     ),
     
-    # Secretaría
+    # Secretaria
     3 => array(
         0 => array(
             "name" => "Clientes",

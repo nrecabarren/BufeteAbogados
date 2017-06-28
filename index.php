@@ -1,4 +1,4 @@
 <?php
-header("Location: ./Vistas/login.php");
+header("Location: ./Controller/Usuario.php?action=login");
 exit();
 ?>

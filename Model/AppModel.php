@@ -147,11 +147,16 @@ class AppModel{
                     end($aux);
                     $ultimoKey = key($aux);
                     foreach($params['conditions'] as $field => $valorABuscar){
-                        if($ultimoKey == $field){
-                            $condiciones .= $field." = '".$valorABuscar."'";
+                        if(is_array($valorABuscar)){
+                            $condiciones .= $field." IN (".implode(',',$valorABuscar).")";
                         } else {
-                            $condiciones .= $field." = '".$valorABuscar."' AND ";
+                            if($ultimoKey == $field){
+                                $condiciones .= $field." = '".$valorABuscar."'";
+                            } else {
+                                $condiciones .= $field." = '".$valorABuscar."' AND ";
+                            }
                         }
+                        
                     }
                 }
             }

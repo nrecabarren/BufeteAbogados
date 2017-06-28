@@ -15,7 +15,6 @@ h2{
 body{
     width: 100%;
     margin: 0;
-    height: 1200px;
 }
 body header{
     width: 100%;
@@ -60,10 +59,12 @@ body header .main_menu ul > li > a.active{
 }
 body section.main_content{
     margin-top: 120px;
+    padding-top: 30px;
 }
 .msg{
     padding: 8px;
     text-align: center;
+    margin-bottom: 25px;
 }
 .msg.msg-error{
     background-color: #f2dede;
