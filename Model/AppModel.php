@@ -44,7 +44,10 @@ class AppModel{
     public function setTableColumns(){
         
         # Guardamos la consulta SHOW COLUMNS en $consultaCampos
+		//echo "SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName."<br/>";
         $consultaCampos = mysql_query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
+		//echo "valor=".$consultaCampos;
+		
         if(!$consultaCampos){
             die('Ha ocurrido un error al obtener los campos. ' . mysql_error() );
         }
