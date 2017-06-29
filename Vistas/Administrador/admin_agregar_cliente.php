@@ -4,14 +4,14 @@
 ?>
 <section class="main_content col-md-offset-1 col-md-10">
     <?php include APP_VIEWS."mensajes.php";?>
-    <form action="Clientes.php?action=adminAgregarCliente" id="" method="POST" class="col-md-offset-3 col-md-6">
+    <form action="Clientes.php?action=adminAgregarCliente" id="AgregarClienteForm" method="POST" class="col-md-offset-3 col-md-6">
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">RUT:</label>
             <div class="col-md-4">
-                <input type="text" name="Usuario[rut]" class="form-control number" maxlength="10">
+                <input type="text" name="Usuario[rut]" class="form-control number rutInput" maxlength="10">
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" disabled="disabled" name="Usuario[dv]">
+                <input type="text" name="Usuario[dv]" class="form-control dvInput" maxlength="1">
             </div>
         </fieldset>
         <fieldset class="form-group row">
@@ -59,26 +59,30 @@
 </section>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.number').maskMoney({
-            thousands: '.',
-            precision: 0,
-            allowZero: true
-        });
-        
-        $('.number').on('change',function(){
-            var rut = $(this).val();
-            var dv = getDV( rut.replace(/\./g,'') );
-            $('input[name="Usuario[dv]"]').val(dv);
-        });
-        
-        function getDV(numero) {
-            nuevo_numero = numero.toString().split("").reverse().join("");
-            for(i=0,j=2,suma=0; i < nuevo_numero.length; i++, ((j==7) ? j=2 : j++)) {
-                suma += (parseInt(nuevo_numero.charAt(i)) * j); 
+        $('.btn-success').on('click',function(e){
+            e.preventDefault();
+            var error = 0;
+            $('#AgregarClienteForm').find('input,select').each(function(){
+                if( $(this).val() == "" ){
+                    if( !$(this).parent().hasClass('has-error') ){
+                        $(this).parent().removeClass('has-success');
+                        $(this).parent().addClass('has-error');
+                    }
+                    error++;
+                } else {
+                    if( $(this).parent().hasClass('has-error') ){
+                        $(this).parent().removeClass('has-error');
+                    }
+                    $(this).parent().addClass('has-success');
+                }
+            });
+            
+            if(error == 0){
+                $('#AgregarClienteForm').submit();
+            } else {
+                alert('Debe llenar todos los campos');
             }
-            n_dv = 11 - (suma % 11);
-            return ((n_dv == 11) ? 0 : ((n_dv == 10) ? "K" : n_dv));
-        }
+        });
     });
 </script>
 <?php include APP_VIEWS."footer.php";?>

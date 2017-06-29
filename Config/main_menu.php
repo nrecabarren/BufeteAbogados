@@ -19,7 +19,7 @@ $main_menu = array(
         ),
         1 => array(
             "name" => "Abogados",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Abogados.php?action=adminListadoAbogados"
         ),
         2 => array(
             "name" => "Usuarios",
@@ -35,11 +35,11 @@ $main_menu = array(
     2 => array(
         0 => array(
             "name" => "Clientes",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Clientes.php?action=gerenteListadoClientes"
         ),
         1 => array(
             "name" => "Abogados",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Abogados.php?action=gerenteListadoAbogados"
         ),
         2 => array(
             "name" => "Atenciones",
@@ -55,11 +55,11 @@ $main_menu = array(
     3 => array(
         0 => array(
             "name" => "Clientes",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Clientes.php?action=secretariaListadoClientes"
         ),
         1 => array(
             "name" => "Abogados",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Abogados.php?action=secretariaListadoAbogados"
         ),
         2 => array(
             "name" => "Atenciones",
