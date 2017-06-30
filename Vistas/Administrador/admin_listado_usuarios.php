@@ -23,7 +23,7 @@
             <?php foreach($usuarios["Usuario"] as $key => $usuario): ?>
                 <tr>
                     <td><?=$usuario["id"];?></td>
-                    <td><?=$usuario["rut"];?></td>
+                    <td><?=$usuario["rut"].'-'.$usuario["dv"];?></td>
                     <td><?=utf8_encode($usuario["nombre_completo"]);?></td>
                     <td><?=$usuario["Perfil"]["descripcion"];?></td>
                     <td class="text-center">

@@ -25,7 +25,7 @@
                 <tr>
                     <td><?=$cliente["id"];?></td>
                     <td><?=utf8_encode($cliente["Usuario"]["nombre_completo"]);?></td>
-                    <td><?=$cliente["Usuario"]["rut"];?></td>
+                    <td><?=$cliente["Usuario"]["rut"].'-'.$cliente["Usuario"]["dv"];?></td>
                     <td><?=date("d/m/Y",strtotime($cliente["fecha_incorporacion"]));?></td>
                     <td><?=utf8_encode($cliente["TipoPersona"]["descripcion"]);?></td>
                     <td class="text-center">

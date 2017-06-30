@@ -81,6 +81,7 @@ class Usuario extends AppController{
             if( !$this->modelo->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
                 $save = array(
                     "rut" => $_POST["Usuario"]["rut"],
+                    "dv" => $_POST["Usuario"]["dv"],
                     "contrasena" => $_POST["Usuario"]["contrasena"],
                     "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
                     "perfil_id" => $_POST["Usuario"]["perfil_id"]
@@ -109,6 +110,7 @@ class Usuario extends AppController{
         if(!empty($_POST)){
             $save = array(
                 "rut" => $_POST["Usuario"]["rut"],
+                "dv" => $_POST["Usuario"]["dv"],
                 "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
                 "perfil_id" => $_POST["Usuario"]["perfil_id"]
             );

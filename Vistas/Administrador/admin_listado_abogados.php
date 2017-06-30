@@ -26,7 +26,7 @@
                 <tr>
                     <td><?=$abogado["id"];?></td>
                     <td><?=utf8_encode($abogado["Usuario"]["nombre_completo"]);?></td>
-                    <td><?=$abogado["Usuario"]["rut"];?></td>
+                    <td><?=$abogado["Usuario"]["rut"].'-'.$abogado["Usuario"]["rut"];?></td>
                     <td><?=date("d/m/Y",strtotime($abogado["fecha_contratacion"]));?></td>
                     <td><?=$abogado["valor_hora"];?></td>
                     <td><?=utf8_encode($abogado["TipoEspecialidad"]["nombre"]);?></td>
