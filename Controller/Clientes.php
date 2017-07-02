@@ -79,6 +79,7 @@ class Clientes extends AppController{
                     $save["contrasena"] = $_POST["Usuario"]["contrasena"];
                 }
                 $save["rut"] = $_POST["Usuario"]["rut"];
+                $save["dv"] = $_POST["Usuario"]["dv"];
                 $save["nombre_completo"] = $_POST["Usuario"]["nombre_completo"];
                 $UsuarioModel->editar($save);
                 

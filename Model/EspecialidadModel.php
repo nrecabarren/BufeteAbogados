@@ -1,14 +1,14 @@
 <?php
 include_once "AppModel.php";
 
-class TipoEspecialidadModel extends AppModel{
+class EspecialidadModel extends AppModel{
     
     var $id;
     var $nombre;
     
     public function __construct(){
         $this->setTableName("especialidad");
-        $this->setName("TipoEspecialidad");
+        $this->setName("Especialidad");
         
         parent::__construct();
     }

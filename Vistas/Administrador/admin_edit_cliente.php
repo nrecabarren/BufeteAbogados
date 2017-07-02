@@ -13,25 +13,25 @@
                 <input type="text" name="Usuario[rut]" value="<?=$cliente["Cliente"]["Usuario"]["rut"];?>" class="form-control number rutInput" maxlength="10">
             </div>
             <div class="col-md-2">
-                <input type="text" name="Usuario[dv]" class="form-control dvInput" maxlength="1">
+                <input type="text" name="Usuario[dv]" value="<?=$cliente["Cliente"]["Usuario"]["dv"];?>" class="form-control dvInput" maxlength="1">
             </div>
         </fieldset>
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">Contraseña:</label>
             <div class="col-md-6">
-                <input type="password" name="Usuario[contrasena]" value="<?=$cliente["Cliente"]["Usuario"]["dv"];?>" class="form-control">
+                <input type="password" name="Usuario[contrasena]" class="form-control">
             </div>
         </fieldset>
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">Nombre Completo:</label>
             <div class="col-md-6">
-                <input type="text" name="Usuario[nombre_completo]" value="<?=$cliente["Cliente"]["Usuario"]["nombre_completo"];?>" class="form-control">
+                <input type="text" name="Usuario[nombre_completo]" value="<?=$cliente["Cliente"]["Usuario"]["nombre_completo"];?>" class="form-control soloLetras">
             </div>
         </fieldset>
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">Dirección:</label>
             <div class="col-md-6">
-                <input type="text" name="Cliente[direccion]" value="<?=$cliente["Cliente"]["direccion"];?>" class="form-control">
+                <input type="text" name="Cliente[direccion]" value="<?=$cliente["Cliente"]["direccion"];?>" class="form-control soloLetras">
             </div>
         </fieldset>
         <fieldset class="form-group row">

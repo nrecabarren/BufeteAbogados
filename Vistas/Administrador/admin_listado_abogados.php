@@ -9,7 +9,7 @@
             <i class="fa fa-plus"></i> Agregar Abogado
         </a>
     </div>
-    <table id="listadoClientes" class="table table-hover table-responsive dataTable">
+    <table id="listadoAbogados" class="table table-hover table-responsive dataTable">
         <thead>
             <tr>
                 <th>Cod.</th>
@@ -22,20 +22,22 @@
             </tr>
         </thead>
         <tbody>
+            <?php if(!empty($abogados)): ?>
             <?php foreach($abogados["Abogado"] as $key => $abogado): ?>
                 <tr>
                     <td><?=$abogado["id"];?></td>
                     <td><?=utf8_encode($abogado["Usuario"]["nombre_completo"]);?></td>
-                    <td><?=$abogado["Usuario"]["rut"].'-'.$abogado["Usuario"]["rut"];?></td>
+                    <td><?=$abogado["Usuario"]["rut"].'-'.$abogado["Usuario"]["dv"];?></td>
                     <td><?=date("d/m/Y",strtotime($abogado["fecha_contratacion"]));?></td>
-                    <td><?=$abogado["valor_hora"];?></td>
-                    <td><?=utf8_encode($abogado["TipoEspecialidad"]["nombre"]);?></td>
+                    <td>$ <?=number_format($abogado["valor_hora"],0,'.',',');?></td>
+                    <td><?=utf8_encode($abogado["Especialidad"]["nombre"]);?></td>
                     <td class="text-center">
                         <a href="<?=CONTROLLER_PATH."Abogados.php?action=adminEditAbogado&id=".$abogado["id"];?>"><i class="fa fa-edit"></i></a>
                         <a href="javascript:;"><i class="fa fa-ban"></i></a>
                     </td>
                 </tr>
             <?php endforeach; ?>
+            <?php endif;?>
         </tbody>
     </table>
 </section>

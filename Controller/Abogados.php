@@ -15,10 +15,10 @@ class Abogados extends AppController{
     }
     
     public function adminListadoAbogados(){
-        $clientes = $this->modelo->buscar('all',array(
+        $abogados = $this->modelo->buscar('all',array(
             "contain" => array(
                 "Usuario",
-                "TipoEspecialidad"
+                "Especialidad"
             )
         ));
         
@@ -29,28 +29,41 @@ class Abogados extends AppController{
     
     public function adminAgregarAbogado(){
         if(!empty($_POST)){
-            
             $save = $_POST["Usuario"];
-            $save["perfil_id"] = 2;
             $UsuarioModel = $this->importModel("UsuarioModel");
             $UsuarioModel->setPrimaryKey("id");
-            if($UsuarioModel->insertaRegistro($save)){
-                
-                $save = $_POST["Abogado"];
-                $save["usuario_id"] = mysql_insert_id();
-                $save["fecha_contratacion"] = date("Y-m-d");
-                $this->modelo->insertaRegistro($save);
-                
-                $_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
-                $this->redireccionar("Clientes.php?action=adminListadoClientes");
+            if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
+                if($UsuarioModel->insertaRegistro($save)){
+                    
+                    $save = $_POST["Abogado"];
+                    $save["usuario_id"] = mysql_insert_id();
+                    $save["fecha_contratacion"] = date('Y-m-d',strtotime($_POST["Abogado"]["fecha_contratacion"]));
+                    $save["valor_hora"] = str_replace('.','',$_POST["Abogado"]["valor_hora"]);
+                    
+                    if($this->modelo->insertaRegistro($save)){
+                        $_SESSION["var_consumibles"]["msg_exito"] = "Abogado guardado correctamente.";
+                    } else {
+                        $_SESSION["var_consumibles"]["msg_exito"] = "Error al guardar el abogado.";
+                    }
+                    
+                    $_SESSION["var_consumibles"]["msg_exito"] .= "Usuario guardado correctamente.";
+                    $this->redireccionar("Abogados.php?action=adminListadoAbogados");
+                }
+                $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el abogado.";
+            } else {
+                $_SESSION["var_consumibles"]["msg_error"] = "Rut ya registrado en el sistema.";
             }
-            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente.";
         }
         
-        $TipoEspecialidadModel = $this->importModel("TipoEspecialidadModel");
-        $tiposEspecialidades = $TipoEspecialidadModel->buscar("all");
+        $EspecialidadModel = $this->importModel("EspecialidadModel");
+        $especialidades = $EspecialidadModel->buscar("all");
+        
+        $PerfilModel = $this->importModel("PerfilModel");
+        $perfiles = $PerfilModel->buscar('all');
+        
         $this->render("Administrador/admin_agregar_abogado.php",array(
-            "tiposEspecialidades" => $tiposPersonas["TipoEspecialidad"]
+            "especialidades" => $especialidades["Especialidad"],
+            "perfiles" => $perfiles["Perfil"]
         ));
     }
     
@@ -58,7 +71,8 @@ class Abogados extends AppController{
         $this->modelo->id = $_GET["id"];
         if(!empty($_POST)){
             $save = array(
-                "valor_hora" => $_POST["Abogado"]["valor_hora"],
+                "fecha_contratacion" => date('Y-m-d',strtotime($_POST["Abogado"]["fecha_contratacion"])),
+                "valor_hora" => str_replace('.','',$_POST["Abogado"]["valor_hora"]),
                 "especialidad_id" => $_POST["Abogado"]["especialidad_id"],
             );
             # Antes de usar el método editar() del modelo, hay que setear el id. ($this->modelo->id).
@@ -66,7 +80,7 @@ class Abogados extends AppController{
                 # Importamos el modelo de Usuario para actualizarle un registro.
                 $UsuarioModel = $this->importModel("UsuarioModel");
                 # Seteamos el id al que está apuntando el modelo.
-                $UsuarioModel->id = $_POST["Cliente"]["usuario_id"];
+                $UsuarioModel->id = $_POST["Abogado"]["usuario_id"];
                 
                 $save = array();
                 if(!empty($_POST["Usuario"]["contrasena"])){
@@ -76,26 +90,30 @@ class Abogados extends AppController{
                 $save["nombre_completo"] = $_POST["Usuario"]["nombre_completo"];
                 $UsuarioModel->editar($save);
                 
-                $_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
+                $_SESSION["var_consumibles"]["msg_exito"] = "Abogado guardado correctamente.";
                 $this->redireccionar("Abogados.php?action=adminListadoAbogados");
             }
-            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al intentar guardar el cliente.";
+            $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al intentar guardar el abogado.";
         }
         
         $conditions["id"] = $this->modelo->id;
-        $cliente = $this->modelo->buscar("first",array(
+        $abogado = $this->modelo->buscar("first",array(
             "conditions" => $conditions,
             "contain" => "Usuario"
         ));
         
-        $TipoEspecialidadModel = $this->importModel("TipoEspecialidadModel");
-        $tiposEspecialidades = $TipoEspecialidadModel->buscar("all");
+        $EspecialidadModel = $this->importModel("EspecialidadModel");
+        $especialidades = $EspecialidadModel->buscar("all");
+        
+        $PerfilModel = $this->importModel("PerfilModel");
+        $perfiles = $PerfilModel->buscar('all');
         
         $this->render("Administrador/admin_edit_abogado.php",array(
             "id" => $this->modelo->id,
-            "cliente" => $cliente,
-            "tiposPersonas" => $tiposPersonas["TipoEspecialidad"]
+            "abogado" => $abogado,
+            "especialidades" => $especialidades["Especialidad"],
+            "perfiles" => $perfiles["Perfil"]
         ));
     }
 }
-$oCliente = new Clientes($_GET["action"]);
+$oAbogados = new Abogados($_GET["action"]);

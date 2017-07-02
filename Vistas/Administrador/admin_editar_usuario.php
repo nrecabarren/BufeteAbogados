@@ -24,7 +24,7 @@
         <fieldset class="form-group row">
             <label class="control-label col-md-3 col-md-offset-1">Nombre Completo:</label>
             <div class="col-md-6">
-                <input type="text" name="Usuario[nombre_completo]" class="form-control" value="<?=$usuario['Usuario']['nombre_completo'];?>">
+                <input type="text" name="Usuario[nombre_completo]" class="form-control soloLetras" value="<?=$usuario['Usuario']['nombre_completo'];?>">
             </div>
         </fieldset>
         <fieldset class="form-group row">

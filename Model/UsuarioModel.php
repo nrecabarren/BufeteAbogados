@@ -6,6 +6,13 @@ class UsuarioModel extends AppModel{
     var $rut;
     var $password;
     var $nombreCompleto;
+    var $_relationShips = array(
+        "Perfil" => array(
+            "type" => "belongsTo",
+            "className" => "PerfilModel",
+            "foreignKey" => "perfil_id"
+        )
+    );
     
     public function __construct($rut = "", $password = "", $nombreCompleto = ""){
         $this->rut = $rut;
@@ -14,14 +21,6 @@ class UsuarioModel extends AppModel{
         
         $this->setTableName("usuario");
         $this->setName("Usuario");
-        
-        $this->setRelationShips(array(
-            "Perfil" => array(
-                "type" => "belongsTo",
-                "className" => "PerfilModel",
-                "foreignKey" => "perfil_id"
-            )
-        ));
         
         parent::__construct();
     }

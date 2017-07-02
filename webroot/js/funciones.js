@@ -2,6 +2,7 @@ $(document).ready(function(){
     $('.datepicker').datepicker({
         language: "es"
     });
+    
     $('.dataTable').DataTable({
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros por página",
@@ -28,7 +29,7 @@ $(document).ready(function(){
         var rut = $('.rutInput').val();
         var dv = getDV( rut.replace(/\./g,'') );
         if( $('.dvInput').val() != "" ){
-            if( $('.dvInput').val() != dv ){
+            if( $('.dvInput').val().toUpperCase() != dv ){
                 if( !$('.rutInput').parent().hasClass('has-error') ){
                     $('.rutInput').parent().addClass('has-error');
                 }
@@ -51,4 +52,27 @@ $(document).ready(function(){
         n_dv = 11 - (suma % 11);
         return ((n_dv == 11) ? 0 : ((n_dv == 10) ? "K" : n_dv));
     }
+    
+    $(".soloLetras").on('keypress',function (key) {
+        console.log('123');
+        if ((key.charCode < 97 || key.charCode > 122)//letras mayusculas
+            && (key.charCode < 65 || key.charCode > 90) //letras minusculas
+            && (key.charCode != 45) //retroceso
+            && (key.charCode != 241) //ñ
+             && (key.charCode != 209) //Ñ
+             && (key.charCode != 32) //espacio
+             && (key.charCode != 225) //á
+             && (key.charCode != 233) //é
+             && (key.charCode != 237) //í
+             && (key.charCode != 243) //ó
+             && (key.charCode != 250) //ú
+             && (key.charCode != 193) //Á
+             && (key.charCode != 201) //É
+             && (key.charCode != 205) //Í
+             && (key.charCode != 211) //Ó
+             && (key.charCode != 218) //Ú
+
+            )
+            return false;
+    });
 });

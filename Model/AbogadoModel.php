@@ -1,5 +1,6 @@
 <?php
-include "AppModel.php";
+include_once "AppModel.php";
+include_once "UsuarioModel.php";
 
 class AbogadoModel extends UsuarioModel{
     
@@ -10,14 +11,16 @@ class AbogadoModel extends UsuarioModel{
     
     public function __construct(
         $rut = "", $password = "", $nombreCompleto = "", $fechaContratacion = "", $valorHora = "", $especialidadId = "", $usuarioId = ""){
+        parent::__construct($rut,$password,$nombreCompleto);
         
         $this->fechaContratacion = $fechaContratacion;
         $this->valorHora = $valorHora;
         $this->especialidadId = $especialidadId;
         $this->usuarioId = $usuarioId;
         
-       $this->setTableName("abogado");
+        $this->setTableName("abogado");
         $this->setName("Abogado");
+        $this->setTableColumns();
         
         $this->setRelationShips(array(
             "Usuario" => array(
@@ -25,14 +28,12 @@ class AbogadoModel extends UsuarioModel{
                 "className" => "UsuarioModel",
                 "foreignKey" => "usuario_id"
             ),
-            "TipoEspecialidad" => array(
+            "Especialidad" => array(
                 "type" => "belongsTo",
-                "className" => "TipoEspecialidadModel",
+                "className" => "EspecialidadModel",
                 "foreignKey" => "especialidad_id"
             )
         ));
-        
-        parent::__construct($rut,$password,$nombreCompleto);
     }
     
 }
