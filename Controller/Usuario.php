@@ -10,9 +10,13 @@ class Usuario extends AppController{
     public function __construct($method){
         parent::__construct($method);
         
-        $this->modelo = new UsuarioModel();
-        $this->modelo->setPrimaryKey("id");
         
+        if($_GET["action"] == "login" && empty($_POST)){
+            
+        } else {
+            $this->modelo = new UsuarioModel();
+            $this->modelo->setPrimaryKey("id");
+        }
         
         if(function_exists($this->$method())){
             $this->$method();

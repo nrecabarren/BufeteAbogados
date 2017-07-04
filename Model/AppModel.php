@@ -14,7 +14,9 @@ class AppModel{
     public function __construct(){
         
         $this->oConexion = new Conexion();
-        $this->oConexion->conectar();
+		if(!$this->oConexion->conectar()){
+			
+		}
         
         $this->setTableColumns();
     }
@@ -45,17 +47,17 @@ class AppModel{
         
         # Guardamos la consulta SHOW COLUMNS en $consultaCampos
 		//echo "SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName."<br/>";
-        $consultaCampos = mysql_query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
+        $consultaCampos = $this->oConexion->query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
 		//echo "valor=".$consultaCampos;
 		
         if(!$consultaCampos){
-            die('Ha ocurrido un error al obtener los campos. ' . mysql_error() );
+            die('Ha ocurrido un error al obtener los campos. ' . $this->oConexion->error() );
         }
         
         $campos = array();
-        if(mysql_num_rows($consultaCampos) > 0){
+        if($this->oConexion->num_rows($consultaCampos) > 0){
             # Recorremos cada tupla que haya retornado.
-            while( $field = mysql_fetch_assoc($consultaCampos)){
+            while( $field = $this->oConexion->fetch_assoc($consultaCampos)){
                 if($field['Key'] == 'PRI'){
                     $this->setPrimaryKey($field['Field']);
                 }
@@ -87,7 +89,7 @@ class AppModel{
         # Query para insertar registro.
         $query = 'INSERT INTO '.$this->oConexion->dbName.".".$this->_tableName.'('.$fields.') VALUES ('.$values.');';
         
-        return mysql_query($query);
+        return $this->oConexion->query($query);
     }
     
     public function editar($datos = array()){
@@ -98,7 +100,7 @@ class AppModel{
         
         $fields = implode(',',$fields);
         $query = "UPDATE ".$this->oConexion->dbName.".".$this->_tableName." SET ".$fields." WHERE id = ".$this->id.";";
-        return mysql_query($query);
+        return $this->oConexion->query($query);
     }
     
     public function buscarPorId($id = null,$params = array()){
@@ -117,7 +119,7 @@ class AppModel{
      *
      * @param string $tipoBusqueda Tipo de búsqueda a realizar, puede ser: (count,all,first).
      * @param array $params Parámetros que servirán a llenar la búsqueda.
-     * @return resource mysql_query.
+     * @return resource mysqli_query.
      */
     public function buscar($tipoBusqueda = 'all',$params = array()){
         
@@ -198,10 +200,10 @@ class AppModel{
         $query .= ';';
         //$this->debug($query);
         
-        $resultados = mysql_query($query);
+        $resultados = $this->oConexion->query($query);
         
         if(!$resultados){
-            die('Consulta invalida. '.mysql_error());
+            die('Consulta invalida. '.$this->oConexion->error());
         }
         
         $arrayResultados = $this->convertirResultadosArray($resultados,$tipoBusqueda);
@@ -272,18 +274,18 @@ class AppModel{
      * convertirResultadosArray method
      * Convierte los resultados de una consulta mysql a Array.
      * 
-     * @param mysql_query $resultados Resultados devueltos por la consulta de mysql_query.
+     * @param mysqli_query $resultados Resultados devueltos por la consulta de mysqli_query.
      * @param string $tipoBusqueda Tipo de búsqueda que se realiza, para devolver una mejor estructura de array.
      * @return array Array con los resultados encontrados.
      */
     public function convertirResultadosArray($resultados, $tipoBusqueda){
         
         $arrayToReturn = array();
-        if(mysql_num_rows($resultados) == 0){
+        if($this->oConexion->num_rows($resultados) == 0){
             return $arrayToReturn;
         }
         
-        while( $fila = mysql_fetch_assoc($resultados) ){
+        while( $fila = $this->oConexion->fetch_assoc($resultados) ){
             if($tipoBusqueda == 'first'){
                 $arrayToReturn[$this->_name] = $fila;
             } elseif($tipoBusqueda == 'all') {
@@ -294,14 +296,14 @@ class AppModel{
                 $arrayToReturn = end($fila);
             }
         }
-        mysql_free_result($resultados);
+        $this->oConexion->free_result($resultados);
         
         return $arrayToReturn;
     }
 	
 	public function eliminar($registroId){
 		$query = "DELETE FROM ".$this->oConexion->dbName.".".$this->_tableName." WHERE ".$this->_primaryKey." = ".$registroId.";";
-		mysql_query($query);
+		$this->oConexion->query($query);
 	}
 
     public function debug($object){
