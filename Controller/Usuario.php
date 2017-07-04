@@ -8,10 +8,18 @@ class Usuario extends AppController{
     var $modelo;
     
     public function __construct($method){
+        parent::__construct($method);
+        
         $this->modelo = new UsuarioModel();
         $this->modelo->setPrimaryKey("id");
         
-        $this->$method();
+        
+        if(function_exists($this->$method())){
+            $this->$method();
+        } else {
+            $_SESSION["var_consumibles"]["msg_error"] = "Acceso denegado.";
+            $this->redireccionar("Usuario.php?action=login");
+        }
     }
     
     public function login(){
@@ -25,6 +33,11 @@ class Usuario extends AppController{
             ));
             
             if(!empty($usuario)){
+                if(!$usuario["Usuario"]["estado"]){
+                    $_SESSION["var_consumibles"]["msg_error"] = "Su usuario se encuentra inhabilitado para usar el sistema.";
+                    $this->redireccionar("Usuario.php?action=login");
+                }
+                
                 
                 $_SESSION["user_logueado"] = $usuario["Usuario"];
                 $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
@@ -139,6 +152,27 @@ class Usuario extends AppController{
             "perfiles" => $perfiles["Perfil"],
             "usuario" => $usuario
         ));
+    }
+    
+    public function adminDarBajaUsuario(){
+        if(!empty($_POST)){
+            $idUsuario = $_POST["usuario"];
+            $this->modelo->id = $idUsuario;
+            
+            $save = array(
+                "estado" => $_POST["estado"]
+            );
+            if($this->modelo->editar($save)){
+                $_SESSION["var_consumibles"]["msg_exito"] = "Usuario editado correctamente.";
+            } else {
+                $_SESSION["var_consumibles"]["msg_error"] = "No se pudo inhabilitar el usuario.";
+            }
+            
+        } else {
+            $_SESSION["var_consumibles"]["msg_error"] = "Acceso denegado.";
+        }
+        exit();
+        //$this->redireccionar("Usuario.php?action=adminListadoUsuarios");
     }
 }
 

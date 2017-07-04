@@ -3,6 +3,13 @@ include "../Config/constants.php";
 
 class AppController{
     
+    public function __construct(){
+        if(empty($_SESSION["user_logueado"]) && $_GET["action"] != "login"){
+            $_SESSION["var_consumibles"]["msg_error"] = "Acceso denegado.";
+            $this->redireccionar("Usuario.php?action=login");
+        }
+    }
+    
     public function redireccionar($path){
         header("Location: ".$path);
         exit();

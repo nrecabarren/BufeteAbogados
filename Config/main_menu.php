@@ -5,10 +5,10 @@ $main_menu = array(
             "name" => "Ingresar",
             "url" => CONTROLLER_PATH."Usuario.php?action=login"
         ),
-        1 => array(
+        /*1 => array(
             "name" => "Registro",
             "url" => CONTROLLER_PATH."Usuario.php?action=registro"
-        )
+        )*/
     ),
     
     # Administrador

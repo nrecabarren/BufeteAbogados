@@ -298,6 +298,11 @@ class AppModel{
         
         return $arrayToReturn;
     }
+	
+	public function eliminar($registroId){
+		$query = "DELETE FROM ".$this->oConexion->dbName.".".$this->_tableName." WHERE ".$this->_primaryKey." = ".$registroId.";";
+		mysql_query($query);
+	}
 
     public function debug($object){
         echo '<pre>';

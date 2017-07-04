@@ -16,6 +16,7 @@
                 <th>RUT</th>
                 <th>Nombre Completo</th>
                 <th>Perfil</th>
+                <th>Estado</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -26,13 +27,34 @@
                     <td><?=$usuario["rut"].'-'.$usuario["dv"];?></td>
                     <td><?=utf8_encode($usuario["nombre_completo"]);?></td>
                     <td><?=$usuario["Perfil"]["descripcion"];?></td>
+                    <td><?=$usuario["estado"] ? 'Habilitado' : 'Inhabilitado';?></td>
                     <td class="text-center">
                         <a href="<?=CONTROLLER_PATH."Usuario.php?action=adminEditarUsuario&id=".$usuario["id"];?>"><i class="fa fa-edit"></i></a>
-                        <a href="javascript:;"><i class="fa fa-ban"></i></a>
+                        <?php if($usuario["estado"]){ ?>
+                            <a href="javascript:;" class="cambiar_estado" rel-estado="0" rel-id="<?=$usuario["id"];?>"><i class="fa fa-ban"></i></a>
+                        <?php } else { ?>
+                            <a href="javascript:;" class="cambiar_estado" rel-estado="1" rel-id="<?=$usuario["id"];?>"><i class="fa fa-check"></i></a>
+                        <?php }?>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </section>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.cambiar_estado').on('click',function(e){
+            var estado = $(this).attr('rel-estado');
+            var usuario = $(this).attr('rel-id');
+            $.ajax({
+                url: "<?=CONTROLLER_PATH."Usuario.php?action=adminDarBajaUsuario";?>",
+                type: "POST",
+                data: { usuario: usuario, estado: estado },
+                success: function(response){
+                    location.reload(); 
+                }
+            });
+        });
+    });
+</script>
 <?php include APP_VIEWS."footer.php";?>
