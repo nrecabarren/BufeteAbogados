@@ -14,8 +14,11 @@ class AppModel{
     public function __construct(){
         
         $this->oConexion = new Conexion();
-		if(!$this->oConexion->conectar()){
+		
+		if($this->oConexion->conectar()){
 			
+		} else {
+			die("Error al conectarse con la base de datos.");
 		}
         
         $this->setTableColumns();
@@ -47,17 +50,17 @@ class AppModel{
         
         # Guardamos la consulta SHOW COLUMNS en $consultaCampos
 		//echo "SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName."<br/>";
-        $consultaCampos = $this->oConexion->query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
+        $consultaCampos = $this->oConexion->objconn->query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
 		//echo "valor=".$consultaCampos;
 		
         if(!$consultaCampos){
-            die('Ha ocurrido un error al obtener los campos. ' . $this->oConexion->error() );
+            die('Ha ocurrido un error al obtener los campos. ' . $this->oConexion->objconn->error() );
         }
         
         $campos = array();
-        if($this->oConexion->num_rows($consultaCampos) > 0){
+        if($consultaCampos->num_rows > 0){
             # Recorremos cada tupla que haya retornado.
-            while( $field = $this->oConexion->fetch_assoc($consultaCampos)){
+            while( $field = $consultaCampos->fetch_assoc()){
                 if($field['Key'] == 'PRI'){
                     $this->setPrimaryKey($field['Field']);
                 }
@@ -89,7 +92,7 @@ class AppModel{
         # Query para insertar registro.
         $query = 'INSERT INTO '.$this->oConexion->dbName.".".$this->_tableName.'('.$fields.') VALUES ('.$values.');';
         
-        return $this->oConexion->query($query);
+        return $this->oConexion->objconn->query($query);
     }
     
     public function editar($datos = array()){
@@ -100,7 +103,7 @@ class AppModel{
         
         $fields = implode(',',$fields);
         $query = "UPDATE ".$this->oConexion->dbName.".".$this->_tableName." SET ".$fields." WHERE id = ".$this->id.";";
-        return $this->oConexion->query($query);
+        return $this->oConexion->objconn->query($query);
     }
     
     public function buscarPorId($id = null,$params = array()){
@@ -200,10 +203,10 @@ class AppModel{
         $query .= ';';
         //$this->debug($query);
         
-        $resultados = $this->oConexion->query($query);
+        $resultados = $this->oConexion->objconn->query($query);
         
         if(!$resultados){
-            die('Consulta invalida. '.$this->oConexion->error());
+            die('Consulta invalida. '.$this->oConexion->objconn->error());
         }
         
         $arrayResultados = $this->convertirResultadosArray($resultados,$tipoBusqueda);
@@ -281,11 +284,11 @@ class AppModel{
     public function convertirResultadosArray($resultados, $tipoBusqueda){
         
         $arrayToReturn = array();
-        if($this->oConexion->num_rows($resultados) == 0){
+        if($resultados->num_rows == 0){
             return $arrayToReturn;
         }
         
-        while( $fila = $this->oConexion->fetch_assoc($resultados) ){
+        while( $fila = $resultados->fetch_assoc() ){
             if($tipoBusqueda == 'first'){
                 $arrayToReturn[$this->_name] = $fila;
             } elseif($tipoBusqueda == 'all') {
@@ -296,14 +299,14 @@ class AppModel{
                 $arrayToReturn = end($fila);
             }
         }
-        $this->oConexion->free_result($resultados);
+        $resultados->free_result();
         
         return $arrayToReturn;
     }
 	
 	public function eliminar($registroId){
 		$query = "DELETE FROM ".$this->oConexion->dbName.".".$this->_tableName." WHERE ".$this->_primaryKey." = ".$registroId.";";
-		$this->oConexion->query($query);
+		$this->oConexion->objconn->query($query);
 	}
 
     public function debug($object){
