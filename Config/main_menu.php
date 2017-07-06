@@ -31,7 +31,7 @@ $main_menu = array(
         )
     ),
     
-    # Gerente
+    # Cliente
     2 => array(
         0 => array(
             "name" => "Clientes",
@@ -51,15 +51,15 @@ $main_menu = array(
         )
     ),
     
-    # Secretaria
+    # Gerente
     3 => array(
         0 => array(
             "name" => "Clientes",
-            "url" => CONTROLLER_PATH."Clientes.php?action=secretariaListadoClientes"
+            "url" => CONTROLLER_PATH."Clientes.php?action=gerenteListadoClientes"
         ),
         1 => array(
             "name" => "Abogados",
-            "url" => CONTROLLER_PATH."Abogados.php?action=secretariaListadoAbogados"
+            "url" => CONTROLLER_PATH."Abogados.php?action=gerenteListadoAbogados"
         ),
         2 => array(
             "name" => "Atenciones",
@@ -71,7 +71,7 @@ $main_menu = array(
         )
     ),
     
-    # Cliente
+    # Secretaria
     4 => array(
         0 => array(
             "name" => "Mis Atenciones",

@@ -8,6 +8,7 @@ class Usuario extends AppController{
     var $modelo;
     
     public function __construct($method){
+		
         parent::__construct($method);
         
         
@@ -27,6 +28,7 @@ class Usuario extends AppController{
     }
     
     public function login(){
+		
         if(!empty($_POST)){
             
             $usuario = $this->modelo->buscar('first',array(
@@ -35,24 +37,36 @@ class Usuario extends AppController{
                     "contrasena" => $_POST["contrasena_usuario"]
                 )
             ));
-            
+			
             if(!empty($usuario)){
+				//echo "llega";
+			    //exit();
                 if(!$usuario["Usuario"]["estado"]){
                     $_SESSION["var_consumibles"]["msg_error"] = "Su usuario se encuentra inhabilitado para usar el sistema.";
                     $this->redireccionar("Usuario.php?action=login");
                 }
                 
-                
                 $_SESSION["user_logueado"] = $usuario["Usuario"];
                 $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
+				
                 if($usuario["Usuario"]["perfil_id"] == 1){
                     $this->redireccionar("Clientes.php?action=adminListadoClientes");
-                }
+                }else if($usuario["Usuario"]["perfil_id"] == 2){
+					
+				}else if($usuario["Usuario"]["perfil_id"] == 3){
+					$this->redireccionar("Clientes.php?action=gerenteListadoClientes");
+				}else if($usuario["Usuario"]["perfil_id"] == 4){
+					
+				}
             }
             
             $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
+			
         }
+		
         if(!empty($_SESSION["user_logueado"])){
+			
+			
             switch($_SESSION["user_logueado"]["perfil_id"]):
                 case "1": # Administrador
                     $this->redireccionar("Clientes.php?action=adminListadoClientes");

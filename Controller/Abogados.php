@@ -26,17 +26,34 @@ class Abogados extends AppController{
             "abogados" => $abogados
         ));
     }
-    
+    public function gerenteListadoAbogados(){
+        $abogados = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "Especialidad"
+            )
+        ));
+        
+        $this->render("Administrador/gerente_listado_abogados.php",array(
+            "abogados" => $abogados
+        ));
+    }
+	
     public function adminAgregarAbogado(){
         if(!empty($_POST)){
-            $save = $_POST["Usuario"];
+            
             $UsuarioModel = $this->importModel("UsuarioModel");
             $UsuarioModel->setPrimaryKey("id");
             if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
-                if($UsuarioModel->insertaRegistro($save)){
+				$save = $_POST["Usuario"];
+                $save["perfil_id"] = 2;
+				$save["estado"] = 1;
+				
+				$id="";
+                if($id=$UsuarioModel->insertaRegistroId($save)){
                     
                     $save = $_POST["Abogado"];
-                    $save["usuario_id"] = mysql_insert_id();
+                    $save["usuario_id"] = $id;
                     $save["fecha_contratacion"] = date('Y-m-d',strtotime($_POST["Abogado"]["fecha_contratacion"]));
                     $save["valor_hora"] = str_replace('.','',$_POST["Abogado"]["valor_hora"]);
                     

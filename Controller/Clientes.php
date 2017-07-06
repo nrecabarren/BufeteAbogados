@@ -26,7 +26,20 @@ class Clientes extends AppController{
             "clientes" => $clientes
         ));
     }
-    
+    public function gerenteListadoClientes(){
+        $clientes = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "TipoPersona"
+            )
+        ));
+        
+        $this->render("Administrador/gerente_listado_clientes.php",array(
+            "clientes" => $clientes
+        ));
+    }
+	
+	
     public function adminAgregarCliente(){
         if(!empty($_POST)){
             
@@ -35,18 +48,36 @@ class Clientes extends AppController{
             if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
                 $save = $_POST["Usuario"];
                 $save["perfil_id"] = 2;
+				$save["estado"] = 1;
                 
-                if($UsuarioModel->insertaRegistro($save)){
-                    
+				$id="";
+				
+                if($id=$UsuarioModel->insertaRegistroId($save)){
+
+					//echo "valor=".$id;
+					//exit();
+					$ClienteModel = $this->importModel("ClienteModel");
+					
                     $save = $_POST["Cliente"];
-                    $save["usuario_id"] = mysql_insert_id();
                     $save["fecha_incorporacion"] = date("Y-m-d");
-                    $this->modelo->insertaRegistro($save);
+					//$save["usuario_id"] = mysql_insert_id();
+					$save["usuario_id"] = $id;
+					
+
+					//die();
+					
+                    if($ClienteModel->insertaRegistro($save)){
+						$_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
+					}else{
+						$_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente1.";
+					}
                     
                     $_SESSION["var_consumibles"]["msg_exito"] = "Cliente guardado correctamente.";
                     $this->redireccionar("Clientes.php?action=adminListadoClientes");
-                }
-                $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente.";
+                }else{
+					$_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al guardar el cliente2.";
+				}
+                
             } else {
                 $_SESSION["var_consumibles"]["msg_error"] = "Rut ya registrado en el sistema.";
             }
