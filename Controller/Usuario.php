@@ -42,29 +42,26 @@ class Usuario extends AppController{
                     $this->redireccionar("Usuario.php?action=login");
                 }
                 
-                
                 $_SESSION["user_logueado"] = $usuario["Usuario"];
                 $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
-                if($usuario["Usuario"]["perfil_id"] == 1){
-                    $this->redireccionar("Clientes.php?action=adminListadoClientes");
-                }
+            } else {
+                $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
             }
-            
-            $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
         }
+        
         if(!empty($_SESSION["user_logueado"])){
             switch($_SESSION["user_logueado"]["perfil_id"]):
                 case "1": # Administrador
                     $this->redireccionar("Clientes.php?action=adminListadoClientes");
                     break;
                 case "2": # Cliente
-                    
+                    $this->redireccionar("Clientes.php?action=index");
                     break;
                 case "3": # Gerente
                     
                     break;
                 case "4": # Secretaria
-                    
+                    $this->redireccionar("Atenciones.php?action=atenciones");
                     break;
             endswitch;
         }

@@ -6,18 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Language" content="es">
         <title>DURALEX | Ingresar</title>
-        <link href="http://localhost/BufeteAbogados/webroot/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="http://localhost/BufeteAbogados/webroot/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-        <link href="http://localhost/BufeteAbogados/webroot/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
-        <link href="http://localhost/BufeteAbogados/webroot/css/datatables.min.css" rel="stylesheet" type="text/css">
-        <link href="http://localhost/BufeteAbogados/webroot/css/font_awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <link href="http://localhost/BufeteAbogados/webroot/css/style.css" rel="stylesheet" type="text/css">
-        <script src="http://localhost/BufeteAbogados/webroot/js/jquery-3.2.1.min.js" type="text/javascript"></script>
-        <script src="http://localhost/BufeteAbogados/webroot/js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="http://localhost/BufeteAbogados/webroot/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-        <script src="http://localhost/BufeteAbogados/webroot/js/datatables.min.js" type="text/javascript"></script>
-        <script src="http://localhost/BufeteAbogados/webroot/js/jquery.maskMoney.min.js" type="text/javascript"></script>
-        <script src="http://localhost/BufeteAbogados/webroot/js/funciones.js" type="text/javascript"></script>
+        <link href="<?=BASE_URL;?>webroot/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/datatables.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/font_awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/style.css" rel="stylesheet" type="text/css">
+        <link href="<?=BASE_URL;?>webroot/css/jquery-ui.multidatespicker.css" type="text/css">
+        <script src="<?=BASE_URL;?>webroot/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/jquery-ui.multidatespicker.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/datatables.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/jquery.maskMoney.min.js" type="text/javascript"></script>
+        <script src="<?=BASE_URL;?>webroot/js/funciones.js" type="text/javascript"></script>
     </head>
     <body>
         <header>

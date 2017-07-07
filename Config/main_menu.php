@@ -31,8 +31,20 @@ $main_menu = array(
         )
     ),
     
-    # Gerente
+    # Cliente
     2 => array(
+        0 => array(
+            "name" => "Mis Atenciones",
+            "url" => ""
+        ),
+        1 => array(
+            "name" => "Salir",
+            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
+        )
+    ),
+    
+    # Gerente
+    3 => array(
         0 => array(
             "name" => "Clientes",
             "url" => CONTROLLER_PATH."Clientes.php?action=gerenteListadoClientes"
@@ -52,7 +64,7 @@ $main_menu = array(
     ),
     
     # Secretaria
-    3 => array(
+    4 => array(
         0 => array(
             "name" => "Clientes",
             "url" => CONTROLLER_PATH."Clientes.php?action=secretariaListadoClientes"
@@ -63,21 +75,9 @@ $main_menu = array(
         ),
         2 => array(
             "name" => "Atenciones",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Atenciones.php?action=atenciones"
         ),
         3 => array(
-            "name" => "Salir",
-            "url" => CONTROLLER_PATH."Usuario.php?action=logout"
-        )
-    ),
-    
-    # Cliente
-    4 => array(
-        0 => array(
-            "name" => "Mis Atenciones",
-            "url" => ""
-        ),
-        1 => array(
             "name" => "Salir",
             "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )

@@ -39,7 +39,7 @@ class Clientes extends AppController{
                 if($UsuarioModel->insertaRegistro($save)){
                     
                     $save = $_POST["Cliente"];
-                    $save["usuario_id"] = mysql_insert_id();
+                    $save["usuario_id"] = $UsuarioModel->oConexion->objconn->insert_id;
                     $save["fecha_incorporacion"] = date("Y-m-d");
                     $this->modelo->insertaRegistro($save);
                     
@@ -103,6 +103,23 @@ class Clientes extends AppController{
             "cliente" => $cliente,
             "tiposPersonas" => $tiposPersonas["TipoPersona"]
         ));
+    }
+
+    public function secretariaListadoClientes(){
+        $clientes = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "TipoPersona"
+            )
+        ));
+        
+        $this->render("Secretaria/listado_clientes.php",array(
+            "clientes" => $clientes
+        ));
+    }
+    public function index(){
+        
+        $this->render("Cliente/index.php");
     }
 }
 $oCliente = new Clientes($_GET["action"]);

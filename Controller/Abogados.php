@@ -29,14 +29,17 @@ class Abogados extends AppController{
     
     public function adminAgregarAbogado(){
         if(!empty($_POST)){
+            
             $save = $_POST["Usuario"];
+            $save["estado"] = 1;
+            
             $UsuarioModel = $this->importModel("UsuarioModel");
             $UsuarioModel->setPrimaryKey("id");
             if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
                 if($UsuarioModel->insertaRegistro($save)){
                     
                     $save = $_POST["Abogado"];
-                    $save["usuario_id"] = mysql_insert_id();
+                    $save["usuario_id"] = $UsuarioModel->oConexion->objconn->insert_id;
                     $save["fecha_contratacion"] = date('Y-m-d',strtotime($_POST["Abogado"]["fecha_contratacion"]));
                     $save["valor_hora"] = str_replace('.','',$_POST["Abogado"]["valor_hora"]);
                     
@@ -115,5 +118,45 @@ class Abogados extends AppController{
             "perfiles" => $perfiles["Perfil"]
         ));
     }
+    public function secretariaListadoAbogados(){
+        $abogados = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "Especialidad"
+            )
+        ));
+        
+        $this->render("Secretaria/listado_abogados.php",array(
+            "abogados" => $abogados
+        ));
+    }
+    
+    
+    public function getAbogadosByEspecialidad(){
+        if(!empty($_POST)){
+            
+            $abogados = $this->modelo->buscar('all',array(
+                'conditions' => array(
+                    'especialidad_id' => $_POST["especialidad"]
+                ),
+                'contain' => "Usuario"
+            ));
+            # Si no encuentra abogados en esa especialidad...
+            if(empty($abogados)){
+                echo '<option value="">No se encontraron abogados</option>';
+            } else {
+                # Imprimimos las opciones del select
+                echo '<option value="">Seleccione</option>';
+                foreach($abogados["Abogado"] as $abogado):
+                    echo '<option value="'.$abogado["id"].'">'.$abogado["Usuario"]["nombre_completo"].'</option>';
+                endforeach;
+            }
+            
+        } else {
+            echo '<option value="">Seleccione</option>';
+        }
+        exit();
+    }
+
 }
 $oAbogados = new Abogados($_GET["action"]);

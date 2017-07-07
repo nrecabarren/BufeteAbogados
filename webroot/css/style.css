@@ -76,3 +76,11 @@ body section.main_content{
     background-color: #dff0d8;
     border: 1px solid #d6e9c6;
 }
+.dataTables_filter > label > input{
+    border: 1px solid #c9c9c9;
+    margin-top: -2px;
+}
+.dataTable{
+    padding-top: 30px;
+    margin-bottom: 30px !important;
+}
