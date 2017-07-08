@@ -157,6 +157,18 @@ class Abogados extends AppController{
         }
         exit();
     }
+    
+    public function getValorHora(){
+        if(!empty($_POST)){
+            $conditions["id"] = $_POST["abogado"];
+            $abogado = $this->modelo->buscar('first',array(
+                'conditions' => $conditions
+            ));
+            
+            echo $abogado["Abogado"]["valor_hora"];
+        }
+        exit();
+    }
 
 }
 $oAbogados = new Abogados($_GET["action"]);

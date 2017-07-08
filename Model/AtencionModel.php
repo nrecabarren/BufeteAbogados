@@ -16,8 +16,26 @@ class AtencionModel extends AppModel{
         $this->abogadoId = $abogadoId;
         $this->estadoId = $estadoId;
         
+        $this->setRelationShips(array(
+            "Cliente" => array(
+                "type" => "belongsTo",
+                "className" => "ClienteModel",
+                "foreignKey" => "cliente_id"
+            ),
+            "Abogado" => array(
+                "type" => "belongsTo",
+                "className" => "AbogadoModel",
+                "foreignKey" => "abogado_id"
+            ),
+            "Estado" => array(
+                "type" => "belongsTo",
+                "className" => "EstadoModel",
+                "foreignKey" => "estado_id"
+            )
+        ));
         
         $this->setTableName("atencion");
+        $this->setName("Atencion");
         parent::__construct();
     }
 }

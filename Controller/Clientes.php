@@ -121,5 +121,25 @@ class Clientes extends AppController{
         
         $this->render("Cliente/index.php");
     }
+    
+    public function getNombre(){
+        if(!empty($_POST)){
+            $conditions['rut'] = $_POST["rut"];
+            
+            $UsuarioModel = $this->importModel("UsuarioModel");
+            $usuario = $UsuarioModel->buscar('first',array(
+                'conditions' => $conditions
+            ));
+            
+            $conditions = array();
+            $conditions['usuario_id'] = $usuario["Usuario"]["id"];
+            $cliente = $this->modelo->buscar('count',array(
+                'conditions' => $conditions
+            ));
+            
+            echo $cliente ? $usuario['Usuario']['nombre_completo'] : '';
+        }
+        exit();
+    }
 }
 $oCliente = new Clientes($_GET["action"]);

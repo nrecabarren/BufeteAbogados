@@ -9,7 +9,7 @@
             <i class="fa fa-plus"></i> Nueva Atención
         </a>
     </div>
-    <table class="table table-hover dataTable">
+    <table id="listaAtenciones" class="table table-hover">
         <thead>
             <tr>
                 <th>Código</th>
@@ -19,21 +19,34 @@
                 <th>Abogado</th>
                 <th>Especialidad</th>
                 <th>Valor</th>
-                <th>Acciones</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php if(!empty($atenciones)): ?>
-            <?php foreach($atenciones as $atencion): ?>
+            <?php foreach($atenciones["Atencion"] as $atencion): ?>
                 <tr>
                     <td><?=$atencion["id"];?></td>
                     <td><?=date('d/m/Y',strtotime($atencion["fecha_atencion"]));?></td>
-                    <td><?=date('H:i',strtotime($atencion["hora-atencion"]));?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><?=date('H:i',strtotime($atencion["hora_atencion"]));?></td>
+                    <td><?=$atencion["Cliente"]["nombre_completo"];?></td>
+                    <td><?=$atencion["Abogado"]["nombre_completo"];?></td>
+                    <td><?=$atencion["Abogado"]["Especialidad"]["nombre"];?></td>
+                    <td><?="$".number_format($atencion["Abogado"]["valor_hora"],0,',','.');?></td>
+                    <td><?=$atencion["Estado"]["descripcion"];?></td>
+                    <td class="text-center">
+                        <?php
+                            if($atencion["Estado"]["id"] == 1){ ?>
+                                <a href="javascript:;" data-toggle="tooltip" title="Marcar como confirmada" rel-estado="3" rel-id="<?=$atencion['id'];?>" class="changeEstatus"><i class="fa fa-check"></i></a>&nbsp;
+                                <a href="javascript:;" data-toggle="tooltip" title="Marcar como anulada" rel-estado="2" rel-id="<?=$atencion['id'];?>" class="changeEstatus"><i class="fa fa-ban"></i></a>&nbsp;<?php
+                            }elseif($atencion["Estado"]["id"] == 3){ ?>
+                                <a href="javascript:;" data-toggle="tooltip" title="Marcar como realizada" rel-estado="5" rel-id="<?=$atencion['id'];?>" class="changeEstatus"><i class="fa fa-check-circle"></i></a>&nbsp;
+                                <a href="javascript:;" data-toggle="tooltip" title="Marcar como anulada" rel-estado="2" rel-id="<?=$atencion['id'];?>" class="changeEstatus"><i class="fa fa-ban"></i></a>&nbsp;
+                                <a href="javascript:;" data-toggle="tooltip" title="Marcar como perdida" rel-estado="4" rel-id="<?=$atencion['id'];?>" class="changeEstatus"><i class="fa fa-times"></i></a><?php
+                            }
+                        ?>
+                    </td>
                 </tr>
             <?php endforeach;?>
             <?php endif; ?>
@@ -45,20 +58,44 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Nueva Atención</h4>
+                <h4 class="modal-title"><strong>Nueva Atención</strong></h4>
             </div>
             <div class="modal-body">
                 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <a href="javascript:;" class="btn btn-primary">Guardar</a>
+                <a href="javascript:;" class="btn btn-primary agendarSubmit">Agendar</a>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#listaAtenciones').DataTable({
+            "order": [ [1,"desc"],[2,"desc"] ],
+                "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se han encontrado registros.",
+                "info": "Página _PAGE_ de _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primera",
+                    "last": "Última",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+            }
+        });
+        
+        $('body').on('click','.changeEstatus',function(){
+            var estado = $(this).attr('rel-estado');
+            var atencion = $(this).attr('rel-id');
+            location.href = "<?=CONTROLLER_PATH;?>Atenciones.php?action=cambiarEstado&atencion="+atencion+"&estado="+estado;
+        });
+        
         $('body').on('click','.nuevaAtencionBtn',function(){
             $.ajax({
                 url: "<?=CONTROLLER_PATH.'Atenciones.php?action=nuevaAtencion';?>",
@@ -68,6 +105,7 @@
                 }
             });
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 <?php include APP_VIEWS."footer.php";?>

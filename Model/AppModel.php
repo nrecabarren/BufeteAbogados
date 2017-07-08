@@ -49,12 +49,10 @@ class AppModel{
     public function setTableColumns(){
         
         # Guardamos la consulta SHOW COLUMNS en $consultaCampos
-		//echo "SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName."<br/>";
         $consultaCampos = $this->oConexion->objconn->query("SHOW COLUMNS FROM ".$this->oConexion->dbName.".".$this->_tableName);
-		//echo "valor=".$consultaCampos;
 		
         if(!$consultaCampos){
-            die('Ha ocurrido un error al obtener los campos. ' . $this->oConexion->objconn->error() );
+            die('Ha ocurrido un error al obtener los campos. ' . $this->oConexion->objconn->error );
         }
         
         $campos = array();
@@ -206,7 +204,7 @@ class AppModel{
         $resultados = $this->oConexion->objconn->query($query);
         
         if(!$resultados){
-            die('Consulta invalida. '.$this->oConexion->objconn->error());
+            die('Consulta invalida. '.$this->oConexion->objconn->error);
         }
         
         $arrayResultados = $this->convertirResultadosArray($resultados,$tipoBusqueda);
