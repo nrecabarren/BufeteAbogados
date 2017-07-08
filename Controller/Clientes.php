@@ -131,7 +131,11 @@ class Clientes extends AppController{
             $usuario = $UsuarioModel->buscar('first',array(
                 'conditions' => $conditions
             ));
-            
+            if(empty($usuario)){
+				echo "";
+				exit();
+			}
+			
             $conditions = array();
             $conditions['usuario_id'] = $usuario["Usuario"]["id"];
             $cliente = $this->modelo->buscar('count',array(

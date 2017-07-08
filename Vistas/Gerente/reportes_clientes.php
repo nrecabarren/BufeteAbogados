@@ -1,5 +1,5 @@
 <?php
-    $currentMenu = "Reportes Atenciones";
+    $currentMenu = "Reportes Clientes";
     include APP_VIEWS."header.php";
 ?>
 <section class="main_content col-md-offset-1 col-md-10">
