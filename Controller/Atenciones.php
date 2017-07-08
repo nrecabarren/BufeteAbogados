@@ -27,8 +27,39 @@ class Atenciones extends AppController{
             $ClienteModel = $this->importModel("ClienteModel");
             $AbogadoModel = $this->importModel("AbogadoModel");
             
+            $noConfirmadasFinal = false;$diaActual = date('d');
             foreach($atencionesAux["Atencion"] as $key => $atencion):
+                $noConfirmadas = false;
+                
+                # Verificamos si hay atenciones que aún no han sido confirmadas.
+                $diaFechaAtencion = explode("-",$atencion["fecha_atencion"])[2];
+                $diasFaltantes = ($diaFechaAtencion - $diaActual);
+                if( $diasFaltantes <= 2  && $atencion["estado_id"] == 1){
+                    $noConfirmadas = true;
+                    $noConfirmadasFinal = true;
+                }
                 $atenciones["Atencion"][$key] = $atencion;
+                
+                # Si la atención no ha sido confirmada faltando sólo 2 días:
+                if($atencion["estado_id"] == 1 && $noConfirmadas && $diasFaltantes == 2){
+                    $atenciones["Atencion"][$key]["icon"] = "warning";
+                
+                # Si la atención fue anulada o perdió la atención
+                } elseif( in_array($atencion["estado_id"],array(2,4)) ){
+                    $atenciones["Atencion"][$key]["icon"] = "danger";
+                
+                # Si faltando un día para la atención esta aún no ha sido confirmada
+                }elseif($atencion["estado_id"] == 1 && $diasFaltantes == 1){
+                    $atenciones["Atencion"][$key]["icon"] = "info";
+                
+                # Si la atención fue confirmada y no se marcó como realizada
+                }elseif( $atencion["estado_id"] == 3 && $diasFaltantes <= -1){
+                    $atenciones["Atencion"][$key]["icon"] = "info-danger";
+                
+                # Si se realizó la atención o fue confirmada a tiempo
+                } else{
+                    $atenciones["Atencion"][$key]["icon"] = "success";
+                }
                 
                 # Buscamos los datos del abogado
                 $abogado = $AbogadoModel->buscar('first',array(
@@ -57,7 +88,8 @@ class Atenciones extends AppController{
             endforeach;
         endif;
         $this->render("Secretaria/atenciones.php",array(
-            'atenciones' => $atenciones
+            'atenciones' => $atenciones,
+            'noConfirmadasFinal' => $noConfirmadasFinal
         ));
     }
     
@@ -149,12 +181,15 @@ class Atenciones extends AppController{
             $UsuarioModel = $this->importModel("UsuarioModel");
             $AbogadoModel = $this->importModel("AbogadoModel");
             
-            $noConfirmadas = false; $diaActual = date('d');
+            $noConfirmadasFinal = false; $diaActual = date('d');
             foreach($atencionesAux["Atencion"] as $key => $atencion):
+                $noConfirmadas = false;
+                
                 $diaFechaAtencion = explode("-",$atencion["fecha_atencion"])[2];
                 $diasFaltantes = ($diaFechaAtencion - $diaActual);
                 if( $diasFaltantes <= 2  && $atencion["estado_id"] == 1){
                     $noConfirmadas = true;
+                    $noConfirmadasFinal = true;
                 }
                 
                 $atenciones["Atencion"][$key] = $atencion;
@@ -184,7 +219,7 @@ class Atenciones extends AppController{
         endif;
         $this->render("Cliente/mis_atenciones.php",array(
             'atenciones' => $atenciones["Atencion"],
-            'noConfirmadas' => $noConfirmadas
+            'noConfirmadasFinal' => $noConfirmadasFinal
         ));
     }
 }

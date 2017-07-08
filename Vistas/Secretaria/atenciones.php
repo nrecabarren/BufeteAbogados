@@ -4,6 +4,11 @@
 ?>
 <section class="main_content col-md-offset-1 col-md-10">
     <?php include APP_VIEWS."mensajes.php";?>
+    <?php if($noConfirmadasFinal): ?>
+        <div class="alert alert-warning">
+            ¡Atención! Hay atenciones en los próximos días que aún no han sido confirmadas.
+        </div>
+    <?php endif;?>
     <div style="margin-top: 20px; margin-bottom: 40px;">
         <a href="javascript:;" class="btn btn-primary nuevaAtencionBtn">
             <i class="fa fa-plus"></i> Nueva Atención
@@ -12,6 +17,7 @@
     <table id="listaAtenciones" class="table table-hover">
         <thead>
             <tr>
+                <th></th>
                 <th>Código</th>
                 <th>Fecha</th>
                 <th>Hora</th>
@@ -27,6 +33,21 @@
             <?php if(!empty($atenciones)): ?>
             <?php foreach($atenciones["Atencion"] as $atencion): ?>
                 <tr>
+                    <td>
+                        <?php
+                        if( $atencion["icon"] == "danger" ){
+                            echo '<i class="fa fa-times-circle" style="color: #a94442;" data-toggle="tooltip" title="La atención anulada o perdida"></i>';
+                        } elseif( $atencion["icon"] == "warning" ){
+                            echo '<i class="fa fa-warning" style="color: #8a6d3b;" data-toggle="tooltip" title="Atención aún no confirmada"></i>';
+                        } elseif( $atencion["icon"] == "info-danger"){
+                            echo '<i class="fa fa-times" style="color: #a94442;" data-toggle="tooltip" title="La atención se marcará como perdida"></i>';
+                        } elseif( in_array($atencion["estado_id"],array(3,5)) ) {
+                            echo '<i class="fa fa-check" style="color: #3c763d;" data-toggle="tooltip" title="Atención confirmada y/o realizada"></i>';
+                        } elseif( $atencion["icon"] == "info" ){
+                            echo '<i class="fa fa-exclamation-circle" style="color: #a94442;" data-toggle="tooltip" title="La atención será anulada"></i>';
+                        }
+                        ?>
+                    </td>
                     <td><?=$atencion["id"];?></td>
                     <td><?=date('d/m/Y',strtotime($atencion["fecha_atencion"]));?></td>
                     <td><?=date('H:i',strtotime($atencion["hora_atencion"]));?></td>

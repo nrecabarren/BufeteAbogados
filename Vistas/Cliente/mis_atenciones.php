@@ -5,7 +5,7 @@
 <section class="main_content col-md-offset-1 col-md-10">
     <?php include APP_VIEWS."mensajes.php";?>
     
-    <?php if($noConfirmadas): ?>
+    <?php if($noConfirmadasFinal): ?>
         <div class="alert alert-warning">
             ¡Atención! Usted posee atenciones en los próximos días y aún no han sido confirmadas.
         </div>
