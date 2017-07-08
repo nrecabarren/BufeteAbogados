@@ -184,5 +184,18 @@ class Clientes extends AppController{
             'tiposPersona' => $tiposPersona["TipoPersona"]
         ));
     }
+    
+    public function gerenteListadoClientes(){
+        $clientes = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "TipoPersona"
+            )
+        ));
+        
+        $this->render("Gerente/gerente_listado_clientes.php",array(
+            "clientes" => $clientes
+        ));
+    }
 }
 $oCliente = new Clientes($_GET["action"]);

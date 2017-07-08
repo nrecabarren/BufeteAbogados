@@ -178,6 +178,19 @@ class Abogados extends AppController{
         }
         exit();
     }
+    
+    public function gerenteListadoAbogados(){
+        $abogados = $this->modelo->buscar('all',array(
+            "contain" => array(
+                "Usuario",
+                "Especialidad"
+            )
+        ));
+        
+        $this->render("Gerente/gerente_listado_abogados.php",array(
+            "abogados" => $abogados
+        ));
+    }
 
 }
 $oAbogados = new Abogados($_GET["action"]);
