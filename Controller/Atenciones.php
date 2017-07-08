@@ -122,8 +122,70 @@ class Atenciones extends AppController{
             $_SESSION["var_consumibles"]["msg_error"] = "Ha ocurrido un error al actualizar la atención.";
         }
         
-        $this->redireccionar("Atenciones.php?action=atenciones");
+        if( $_SESSION["user_logueado"]["perfil_id"] == 2){
+            $this->redireccionar("Atenciones.php?action=misAtenciones");
+        } else {
+            $this->redireccionar("Atenciones.php?action=atenciones");
+        }
     }
     
+    public function misAtenciones(){
+        $ClienteModel = $this->importModel("ClienteModel");
+        
+        $cliente = $ClienteModel->buscar('first',array(
+            'conditions' => array('usuario_id' => $_SESSION["user_logueado"]["id"]),
+            'fields' => 'id'
+        ));
+        
+        $atenciones = array();
+        $atencionesAux = $this->modelo->buscar('all',array(
+            'contain' => 'Estado',
+            'conditions' => array(
+                'cliente_id' => $cliente["Cliente"]["id"]
+            )
+        ));
+        
+        if(!empty($atencionesAux)):
+            $UsuarioModel = $this->importModel("UsuarioModel");
+            $AbogadoModel = $this->importModel("AbogadoModel");
+            
+            $noConfirmadas = false; $diaActual = date('d');
+            foreach($atencionesAux["Atencion"] as $key => $atencion):
+                $diaFechaAtencion = explode("-",$atencion["fecha_atencion"])[2];
+                $diasFaltantes = ($diaFechaAtencion - $diaActual);
+                if( $diasFaltantes <= 2  && $atencion["estado_id"] == 1){
+                    $noConfirmadas = true;
+                }
+                
+                $atenciones["Atencion"][$key] = $atencion;
+                
+                if($atencion["estado_id"] == 1 && $noConfirmadas){
+                    $atenciones["Atencion"][$key]["icon"] = "warning";
+                } elseif( in_array($atencion["estado_id"],array(2,4)) ){
+                    $atenciones["Atencion"][$key]["icon"] = "danger";
+                } else{
+                    $atenciones["Atencion"][$key]["icon"] = "success";
+                }
+                
+                # Buscamos los datos del abogado
+                $abogado = $AbogadoModel->buscar('first',array(
+                    'conditions' => array('id' => $atencion["abogado_id"]),
+                    'fields' => 'id,valor_hora,usuario_id,especialidad_id',
+                    'contain' => 'Especialidad'
+                ));
+                $abogado["Abogado"]["nombre_completo"] = $UsuarioModel->buscar('first',array(
+                    'conditions' => array('id' => $abogado["Abogado"]["usuario_id"]),
+                    'fields' => 'nombre_completo'
+                ))["Usuario"]["nombre_completo"];
+                
+                $atenciones["Atencion"][$key]["Abogado"] = $abogado["Abogado"];
+                
+            endforeach;
+        endif;
+        $this->render("Cliente/mis_atenciones.php",array(
+            'atenciones' => $atenciones["Atencion"],
+            'noConfirmadas' => $noConfirmadas
+        ));
+    }
 }
 $oAtenciones = new Atenciones($_GET["action"]);

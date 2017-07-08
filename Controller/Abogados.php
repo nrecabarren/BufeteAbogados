@@ -32,6 +32,7 @@ class Abogados extends AppController{
             
             $save = $_POST["Usuario"];
             $save["estado"] = 1;
+            $save["contrasena"] = md5($save["contrasena"]);
             
             $UsuarioModel = $this->importModel("UsuarioModel");
             $UsuarioModel->setPrimaryKey("id");
@@ -87,7 +88,7 @@ class Abogados extends AppController{
                 
                 $save = array();
                 if(!empty($_POST["Usuario"]["contrasena"])){
-                    $save["contrasena"] = $_POST["Usuario"]["contrasena"];
+                    $save["contrasena"] = md5($_POST["Usuario"]["contrasena"]);
                 }
                 $save["rut"] = $_POST["Usuario"]["rut"];
                 $save["nombre_completo"] = $_POST["Usuario"]["nombre_completo"];

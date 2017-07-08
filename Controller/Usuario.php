@@ -32,7 +32,7 @@ class Usuario extends AppController{
             $usuario = $this->modelo->buscar('first',array(
                     "conditions" => array(
                     "rut" => $_POST["rut_usuario"],
-                    "contrasena" => $_POST["contrasena_usuario"]
+                    "contrasena" => md5($_POST["contrasena_usuario"])
                 )
             ));
             
@@ -43,7 +43,7 @@ class Usuario extends AppController{
                 }
                 
                 $_SESSION["user_logueado"] = $usuario["Usuario"];
-                $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido, ".$usuario["Usuario"]["nombre_completo"];
+                $_SESSION["var_consumibles"]["msg_exito"] = "Bienvenido(a), ".$usuario["Usuario"]["nombre_completo"];
             } else {
                 $_SESSION["var_consumibles"]["msg_error"] = "Nombre de usuario o contraseña incorrectos.";
             }
@@ -55,7 +55,7 @@ class Usuario extends AppController{
                     $this->redireccionar("Clientes.php?action=adminListadoClientes");
                     break;
                 case "2": # Cliente
-                    $this->redireccionar("Clientes.php?action=index");
+                    $this->redireccionar("Atenciones.php?action=misAtenciones");
                     break;
                 case "3": # Gerente
                     
@@ -96,7 +96,7 @@ class Usuario extends AppController{
                 $save = array(
                     "rut" => $_POST["Usuario"]["rut"],
                     "dv" => $_POST["Usuario"]["dv"],
-                    "contrasena" => $_POST["Usuario"]["contrasena"],
+                    "contrasena" => md5($_POST["Usuario"]["contrasena"]),
                     "nombre_completo" => $_POST["Usuario"]["nombre_completo"],
                     "perfil_id" => $_POST["Usuario"]["perfil_id"]
                 );
@@ -130,7 +130,7 @@ class Usuario extends AppController{
             );
             
             if(!empty($_POST["Usuario"]["contrasena"])){
-                $save["contrasena"] = $_POST["Usuario"]["contrasena"];
+                $save["contrasena"] = md5($_POST["Usuario"]["contrasena"]);
             }
             
             if($this->modelo->editar($save)){
@@ -173,7 +173,6 @@ class Usuario extends AppController{
             $_SESSION["var_consumibles"]["msg_error"] = "Acceso denegado.";
         }
         exit();
-        //$this->redireccionar("Usuario.php?action=adminListadoUsuarios");
     }
 }
 

@@ -35,6 +35,7 @@ class Clientes extends AppController{
             if( !$UsuarioModel->validaUsuarioExistente($_POST["Usuario"]["rut"]) ){
                 $save = $_POST["Usuario"];
                 $save["perfil_id"] = 2;
+                $save["contrasena"] = md5($save["contrasena"]);
                 
                 if($UsuarioModel->insertaRegistro($save)){
                     
@@ -76,7 +77,7 @@ class Clientes extends AppController{
                 
                 $save = array();
                 if(!empty($_POST["Usuario"]["contrasena"])){
-                    $save["contrasena"] = $_POST["Usuario"]["contrasena"];
+                    $save["contrasena"] = md5($_POST["Usuario"]["contrasena"]);
                 }
                 $save["rut"] = $_POST["Usuario"]["rut"];
                 $save["dv"] = $_POST["Usuario"]["dv"];

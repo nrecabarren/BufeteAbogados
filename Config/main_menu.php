@@ -35,7 +35,7 @@ $main_menu = array(
     2 => array(
         0 => array(
             "name" => "Mis Atenciones",
-            "url" => ""
+            "url" => CONTROLLER_PATH."Atenciones.php?action=misAtenciones"
         ),
         1 => array(
             "name" => "Salir",
