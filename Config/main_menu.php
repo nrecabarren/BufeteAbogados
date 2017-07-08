@@ -54,10 +54,14 @@ $main_menu = array(
             "url" => CONTROLLER_PATH."Abogados.php?action=gerenteListadoAbogados"
         ),
         2 => array(
-            "name" => "Atenciones",
-            "url" => ""
+            "name" => "Reportes Atenciones",
+            "url" => CONTROLLER_PATH."Atenciones.php?action=reportesAtenciones"
         ),
         3 => array(
+            "name" => "Reportes Clientes",
+            "url" => CONTROLLER_PATH."Clientes.php?action=reportesClientes"
+        ),
+        4 => array(
             "name" => "Salir",
             "url" => CONTROLLER_PATH."Usuario.php?action=logout"
         )

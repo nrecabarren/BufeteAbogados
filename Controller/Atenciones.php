@@ -222,5 +222,49 @@ class Atenciones extends AppController{
             'noConfirmadasFinal' => $noConfirmadasFinal
         ));
     }
+    
+    public function reportesAtenciones(){
+        $atenciones = array();
+        if(!empty($_POST)){
+            $conditions = array();
+            if(!empty($_POST["abogado_id"])){
+                $conditions['abogado_id'] = $_POST["abogado_id"];
+            }
+            if(!empty($_POST["estado_id"])){
+                $conditions['estado_id'] = $_POST["estado_id"];
+            }
+            
+            $atenciones = $this->modelo->buscar('all',array(
+                'conditions' => $conditions,
+                'contain' => 'Abogado'
+            ));
+        }
+        
+        $AbogadoModel = $this->importModel("AbogadoModel");
+        $EspecialidadModel = $this->importModel("EspecialidadModel");
+        $EstadoModel = $this->importModel("EstadoModel");
+        
+        $abogadosAux = $AbogadoModel->buscar('all',array(
+            'fields' => 'id,usuario_id',
+            'contain' => 'Usuario'
+        ));
+        $abogados = array();
+        foreach($abogadosAux["Abogado"] as $abogado){
+            $key = $abogado["id"];
+            $value = $abogado["Usuario"]["nombre_completo"];
+            $abogados[$key] = $value;
+        }
+        
+        
+        $especialidades = $EspecialidadModel->buscar('all');
+        $estados = $EstadoModel->buscar('all');
+        
+        $this->render("Gerente/reportes_atenciones.php",array(
+            'atenciones' => $atenciones,
+            'abogados' => $abogados,
+            'especialidades' => $especialidades["Especialidad"],
+            'estados' => $estados["Estado"]
+        ));
+    }
 }
 $oAtenciones = new Atenciones($_GET["action"]);

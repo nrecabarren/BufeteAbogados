@@ -89,7 +89,8 @@
         });
         
         $('.datepicker').datepicker({
-            language: "es"
+            language: "es",
+            daysOfWeekDisabled: "0,6"
         });
         
         $('.dvInput, .rutInput').on('change',function(){
@@ -163,8 +164,14 @@
                     data: { abogado : abogado },
                     type: "POST",
                     success: function(response){
-                        console.log(response);
-                        $('#ValorHora').val( $.trim(response) );
+                        var arrayResponse = response.split(',');
+                        $('#ValorHora').val( $.trim(arrayResponse[0]) );
+                        $('.datepicker').datepicker('destroy');
+                        $('.datepicker').datepicker({
+                            language: "es",
+                            daysOfWeekDisabled: "0,6",
+                            startDate: arrayResponse[1]
+                        });
                     }
                 });
             }

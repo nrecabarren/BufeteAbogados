@@ -166,7 +166,15 @@ class Abogados extends AppController{
                 'conditions' => $conditions
             ));
             
-            echo $abogado["Abogado"]["valor_hora"];
+            $fechaActual = date('m-d-Y');
+            $fechaContratacion = date('m-d-Y',strtotime($abogado["Abogado"]["fecha_contratacion"]));
+            if( $fechaActual < $fechaContratacion){
+                $fechaComienzo = $fechaContratacion;
+            } else {
+                $fechaComienzo = $fechaActual;
+            }
+            
+            echo $abogado["Abogado"]["valor_hora"].",".$fechaComienzo;
         }
         exit();
     }

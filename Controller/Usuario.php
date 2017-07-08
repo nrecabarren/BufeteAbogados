@@ -58,7 +58,7 @@ class Usuario extends AppController{
                     $this->redireccionar("Atenciones.php?action=misAtenciones");
                     break;
                 case "3": # Gerente
-                    
+                    $this->redireccionar("Atenciones.php?action=reportesAtenciones");
                     break;
                 case "4": # Secretaria
                     $this->redireccionar("Atenciones.php?action=atenciones");

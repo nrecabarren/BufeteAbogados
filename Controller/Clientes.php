@@ -142,5 +142,47 @@ class Clientes extends AppController{
         }
         exit();
     }
+    
+    public function reportesClientes(){
+        $conditions = array();
+        if(!empty($_POST)){
+            if(!empty($_POST["tipo_persona_id"])){
+                $conditions['tipo_persona_id'] = $_POST["tipo_persona_id"];
+            }
+            
+        }
+        $clientesAux = $this->modelo->buscar('all',array(
+            'conditions' => $conditions,
+            'contain' => array(
+                'Usuario',
+                'TipoPersona'
+            )
+        ));
+        
+        $AtencionModel = $this->importModel("AtencionModel");
+        $clientes = array();
+        foreach($clientesAux["Cliente"] as $key => $cliente){
+            $cantidadAtenciones = $AtencionModel->buscar('count',array(
+                'conditions' => array(
+                    'cliente_id' => $cliente["id"],
+                    'estado_id' => 5
+                )
+            ));
+            if(!empty($_POST["cant_atenciones"]) && $cantidadAtenciones != $_POST["cant_atenciones"]){
+                continue;
+            }
+            
+            $clientes[$key] = $cliente;
+            $clientes[$key]["cant_atenciones"] = $cantidadAtenciones;
+        }
+        
+        $TipoPersonaModel = $this->importModel("TipoPersonaModel");
+        $tiposPersona = $TipoPersonaModel->buscar('all');
+        
+        $this->render("Gerente/reportes_clientes.php",array(
+            'clientes' => $clientes,
+            'tiposPersona' => $tiposPersona["TipoPersona"]
+        ));
+    }
 }
 $oCliente = new Clientes($_GET["action"]);
